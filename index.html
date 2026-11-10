@@ -1,29 +1,585 @@
-<!doctype html><html lang="mr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#123b63"><link rel="manifest" href="manifest.webmanifest"><title>Warud Security Attendance</title>
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>२२० केव्ही वरुड - सुरक्षा रक्षक हजेरी व्यवस्थापन</title>
 <style>
-:root{--navy:#123b63;--blue:#1769aa;--bg:#f2f5f9;--line:#d7e0ea;--ink:#172b3e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,"Noto Sans Devanagari",sans-serif}header{background:linear-gradient(120deg,#123b63,#1769aa);color:white;padding:18px}header h1{font-size:clamp(22px,5vw,30px);margin:0 0 5px}header p{margin:0}main{max-width:1100px;margin:auto;padding:12px}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:13px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #bdcbd9;border-radius:8px;background:white;font:inherit}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.filelabel{border:0;border-radius:9px;padding:11px 13px;background:var(--blue);color:white;font-weight:700;cursor:pointer}.secondary{background:#e8eff6;color:#183b5c}.filelabel input{display:none}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:10px 0}.stat{text-align:center;background:#f5f8fb;border:1px solid var(--line);border-radius:9px;padding:8px}.stat b{display:block;font-size:20px}.stat small{font-size:11px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:9px}table{border-collapse:collapse;width:100%;min-width:800px;font-size:12px;background:white}th,td{border:1px solid var(--line);padding:4px;text-align:center}th{background:#eaf1f8}td.guard{text-align:left;min-width:170px;font-weight:650}td select{padding:4px 1px;font-size:12px;min-width:43px}.note{font-size:12px;color:#596d80;line-height:1.5}h2{font-size:18px;margin:0 0 10px}footer{text-align:center;font-size:12px;color:#718091;padding:12px}@media(max-width:600px){.stats{grid-template-columns:repeat(3,1fr)}main{padding:9px}.panel{padding:10px}}@media print{body{background:white}header{background:white;color:black;text-align:center;padding:0 0 8px}main{padding:0;max-width:none}.no-print{display:none!important}.panel{border:0;padding:3px;margin:0}.tablewrap{overflow:visible;border:0}table{min-width:0;font-size:8px}th,td{padding:2px}td select{appearance:none;border:0;padding:0;font-size:8px;color:black}footer{display:none}@page{size:A3 landscape;margin:9mm}}
-</style></head><body><header><h1>मासिक सुरक्षा रक्षक हजेरी पत्रक</h1><p>२२० केव्ही उपकेंद्र वरुड (बेणोडा)</p></header><main>
-<section class="panel no-print"><h2>महिना व नोंद व्यवस्थापन</h2><div class="controls"><div><label>महिना</label><select id="month"></select></div><div><label>वर्ष</label><input id="year" type="number" min="2020" max="2100"></div></div><div class="actions"><button onclick="save()">Save</button><button class="secondary" onclick="fill('P')">Quick Fill P</button><button class="secondary" onclick="fill('WO')">Quick Fill WO</button><button class="secondary" onclick="clearMonth()">Clear Month</button><button class="secondary" onclick="exportCSV()">Excel / CSV Export</button><button class="secondary" onclick="print()">Print Register</button><button class="secondary" onclick="backup()">Backup JSON</button><label class="filelabel secondary">Restore Backup<input id="restore" type="file" accept=".json"></label></div><p class="note">Codes: P = Present, WO = Weekly Off, WO/P = Duty on Weekly Off, ET = Extra Duty, A = Absent. Data is stored in this browser on this device. Regularly download a JSON backup.</p></section>
-<section class="panel"><h2 id="title"></h2><div class="stats"><div class="stat"><b id="p">0</b><small>Present</small></div><div class="stat"><b id="wo">0</b><small>Weekly Off</small></div><div class="stat"><b id="a">0</b><small>Absent</small></div><div class="stat"><b id="ex">0</b><small>Extra Duties</small></div><div class="stat"><b id="tot">0</b><small>Total Duties</small></div></div><div class="tablewrap"><table id="tbl"><thead></thead><tbody></tbody></table></div><p class="note">Total duties = P + WO/P + ET. Weekly off = WO + WO/P. Extra duties = WO/P + ET.</p><label>शेरा / Remarks</label><textarea id="remark" rows="2"></textarea></section>
-<section class="panel"><h2>Guard Management</h2><div class="no-print"><div class="controls"><div><label>Guard name</label><input id="newName" placeholder="Guard full name"></div><div><label>Guard number</label><input id="newNo" placeholder="Guard number"></div></div><div class="actions"><button onclick="addGuard()">Add Guard</button></div></div><div id="guards" class="note"></div></section></main><footer>Developed by Prashant D. Patil</footer>
+:root{--navy:#17365d;--blue:#1f4e78;--pale:#eaf2f8;--line:#c5d0da;--green:#e2f0d9;--yellow:#fff2cc;--red:#fce4d6}
+*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#1e2935;font:14px Arial,sans-serif}.wrap{max-width:1700px;margin:16px auto;padding:0 12px}
+.top{background:var(--navy);color:#fff;text-align:center;padding:13px;border-radius:10px 10px 0 0}.top h2{font-size:18px;margin:0 0 4px}.top div{font-size:13px}
+.tabs{display:flex;gap:8px;background:#fff;padding:10px;border:1px solid #d2dbe4;border-top:0}.tab{background:#e8eef4;color:#17365d;border:0;padding:10px 18px}.tab.active{background:var(--blue);color:#fff}
+.panel{background:#fff;border:1px solid #d2dbe4;border-top:0;padding:14px;margin-bottom:14px}.hidden{display:none!important}
+.controls{display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin-bottom:12px}.field{display:flex;flex-direction:column;gap:4px;font-weight:bold;font-size:12px;color:#44556a}
+input,select,button{font:inherit;border:1px solid #aebdca;border-radius:6px;padding:8px;background:#fff;color:#172536}
+button{cursor:pointer;background:var(--blue);color:white;border-color:var(--blue);font-weight:bold}button.alt{background:#fff;color:var(--blue)}button.danger{background:#a93226;border-color:#a93226}
+.hint{font-size:12px;color:#526477;line-height:1.5}.quick{background:#f3f7fb;border:1px solid #d8e2ec;padding:10px;border-radius:8px;margin:8px 0 12px}
+.sheet{background:#fff;padding:10px;overflow:auto}.sheet-head{text-align:center;background:var(--navy);color:#fff;padding:6px;font-weight:bold}.sheet-head.sub{background:var(--blue);font-size:11px}.sheet-head.title{font-size:15px}
+table{border-collapse:collapse;width:100%;min-width:1250px;table-layout:fixed;margin-top:8px}th,td{border:1px solid var(--line);text-align:center;padding:3px 2px;font-size:10px}
+thead tr:first-child th{background:var(--blue);color:white}thead tr:nth-child(2) th{background:#d9eaf7;color:#1b2938}
+th.sr,td.sr{width:32px}th.name,td.name{width:175px;text-align:left;padding-left:5px}th.desig,td.desig{width:45px}th.day,td.day{width:27px}th.sum,td.sum{width:62px;background:var(--pale);font-weight:bold}
+td.day button{display:block;width:100%;padding:5px 0;border:0;border-radius:0;background:transparent;color:#111;font-size:10px;font-weight:bold}
+td.day.p{background:var(--green)}td.day.off{background:var(--yellow)}td.day.abs{background:var(--red)}td.day.offp{background:#d9eaf7}
+td.day button:focus{outline:2px solid #1f4e78;outline-offset:-2px}
+.legend,.note{font-size:10px;padding:7px;background:#eaf2f8;margin-top:8px;line-height:1.45}.note{background:#f7f8fa}
+.cert{margin-top:10px}.cert h3{font-size:11px;background:var(--blue);color:#fff;padding:6px;margin:0}.cert p{font-size:9px;padding:3px;margin:0;border-bottom:1px solid #ddd}
+.signatures{display:grid;grid-template-columns:1fr;gap:8px;margin-top:26px}.sig{text-align:center;border-top:1px solid #596777;padding-top:5px;min-height:50px;font-size:9px;line-height:1.5}
+.guard-form{display:grid;grid-template-columns:2fr 1fr auto;gap:10px;align-items:end;max-width:850px}.guard-list{margin-top:16px;max-width:900px}.guard-list table{min-width:0}.guard-list th{background:var(--blue);color:#fff}.guard-list td{text-align:left;font-size:12px;padding:7px}
+.status{font-size:12px;color:#24633b;margin-left:6px}.weekday-grid{display:grid;grid-template-columns:repeat(7,minmax(80px,1fr));gap:7px}.weekday-grid label{background:#fff;border:1px solid #c8d5e1;border-radius:7px;padding:9px;text-align:center;font-weight:bold;font-size:12px}.weekday-grid input{margin-right:4px}@media(max-width:800px){.weekday-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.guard-form{grid-template-columns:1fr}.signatures{grid-template-columns:repeat(2,1fr)}.tabs{flex-wrap:wrap}}
+@page{size:A3 landscape;margin:7mm}
+@media print{body{background:#fff}.wrap{margin:0;padding:0;max-width:none}.top,.tabs,.controls,.quick,.quick-workflow,.no-print,#guardPanel,#quickPanel{display:none!important}#attendancePanel{display:block!important;border:0;padding:0;margin:0}.panel{border:0;padding:0}.sheet{padding:0;overflow:visible}table{min-width:0;width:100%;margin-top:4px}th,td{font-size:7px;padding:2px 1px}th.day,td.day{width:auto}th.name,td.name{width:145px}th.sr,td.sr{width:24px}th.desig,td.desig{width:32px}th.sum,td.sum{width:47px}td.day button{font-size:7px;padding:1px 0}.sheet-head{padding:4px}.sheet-head.title{font-size:12px}.sheet-head.sub{font-size:8px}.legend,.note{font-size:7px;padding:3px}.cert p{font-size:7px;padding:2px}.signatures{display:grid;grid-template-columns:1fr;margin-top:16px}.forward-cert{justify-self:stretch;text-align:right;font-weight:700;font-size:12px;min-height:22px;width:100%;border-top:0;padding-right:2px}.sig{font-size:7px;min-height:38px}}
+
+/* Official printed register heading */
+.print-letterhead{display:none}
+.print-area{font-weight:bold;text-align:left;border-bottom:1px solid #222;padding:2px 4px;font-size:14px}
+.print-gov{text-align:center;font-size:13px;padding:2px}
+.print-title{text-align:center;font-size:18px;font-weight:bold;padding:3px}
+.print-subrow{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:bold;padding:3px 4px;border-bottom:1px solid #222}
+/* Readable data-entry and print layout */
+body{font-size:14px}
+.sheet-head{font-size:14px}
+.sheet-head.title{font-size:16px}
+table{min-width:0;width:100%;table-layout:fixed}
+th,td{font-size:14px;padding:4px 2px;white-space:normal;overflow-wrap:anywhere}
+th.sr,td.sr{width:7mm}
+th.guardno,td.guardno{width:10mm}
+th.name,td.name{width:43mm}
+th.desig,td.desig{width:12mm}
+th.day,td.day{width:6.3mm}
+th.sum,td.sum{width:12mm;font-size:13px;padding-left:1px;padding-right:1px}
+td.day button{font-size:14px;padding:4px 0}
+.quick-workflow{background:#eaf2f8;border:1px solid #c8d9e8;border-radius:8px;padding:11px 13px;margin:2px 0 12px;font-size:13px;line-height:1.6;color:#17365d}.quick-step{background:#f5f8fb;border:1px solid #d6e0e9;border-radius:9px;padding:13px;margin:10px 0}
+.quick-step h3{font-size:15px;color:#17365d;margin:0 0 8px}
+.code-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.code-buttons button{font-size:14px;padding:10px 14px}
+.code-wo{background:#b7791f;border-color:#b7791f}.code-wop{background:#247a49;border-color:#247a49}
+.code-et{background:#5b5fc7;border-color:#5b5fc7}.code-p{background:#1f7a45;border-color:#1f7a45}.code-a{background:#a93226;border-color:#a93226}
+.cert-edit input,.cert-edit select{font-size:14px;padding:2px 5px;border:1px solid #8293a5;border-radius:3px}
+.cert-edit input{width:95px}
+.guard-form{grid-template-columns:2fr 1fr 1fr auto}
+@media print{
+ @page{size:A3 landscape;margin:6mm}
+ html,body{margin:0;padding:0;background:#fff;font-size:14px}
+ .wrap{margin:0;padding:0;max-width:none}
+ .top,.tabs,.controls,.quick,.quick-workflow,.no-print,#guardPanel,#quickPanel{display:none!important}
+ #attendancePanel{display:block!important;border:0;padding:0;margin:0}
+ .panel{border:0;padding:0;margin:0}
+ .sheet{padding:0;overflow:visible}
+ .print-letterhead{display:block}
+ .sheet-head{display:none!important;padding:3px;font-size:14px}
+ .sheet-head.title{font-size:16px}
+ table{width:100%;min-width:0;table-layout:fixed;margin-top:3px}
+ th,td{font-size:14px;padding:4px 1px;white-space:normal;overflow-wrap:anywhere;vertical-align:middle}
+ th.sr,td.sr{width:7mm}
+ th.guardno,td.guardno{width:10mm}
+ th.name,td.name{width:43mm}
+ th.desig,td.desig{width:12mm}
+ th.day,td.day{width:6.3mm}
+ th.sum,td.sum{width:12mm;font-size:12px;padding:3px 0}
+ td.day button{font-size:14px;padding:3px 0;line-height:1.15}
+ tr{height:auto;break-inside:avoid}
+ td,th{height:auto}
+ .legend,.note{font-size:12px;padding:4px;margin-top:4px}
+ .cert{margin-top:6px}
+ .cert h3{font-size:14px;padding:4px}
+ .cert p{font-size:14px;padding:4px 2px;line-height:1.25}
+ .cert-edit input,.cert-edit select{font-size:14px;border:0;padding:0;background:transparent;appearance:none}
+ .signatures{display:grid;grid-template-columns:1fr;margin-top:16px}.forward-cert{justify-self:stretch;text-align:right;font-weight:700;font-size:12px;min-height:22px;width:100%;border-top:0;padding-right:2px}
+ .sig{font-size:13px;min-height:48px}
+}
+
+@media(max-width:700px){.guard-form{grid-template-columns:1fr}}
+
+/* Customizable print heading, remark and forwarding stamp space */
+.print-area{text-align:center!important;font-size:16px!important;padding:3px 4px!important}
+.print-gov{text-align:center!important;font-size:16px!important;padding:3px!important}
+.forward-cert{width:calc(100% - 28mm)!important;margin-left:auto!important;padding-right:0!important;text-align:right!important}
+.print-remark{display:none}
+@media print{
+ .print-area{font-size:16px!important;text-align:center!important}
+ .print-gov{font-size:16px!important}
+ .print-remark{display:block!important;font-size:14px!important;min-height:12mm;padding:5px 2px;border-bottom:1px solid #222;white-space:pre-wrap;overflow-wrap:anywhere}
+ .forward-cert{width:calc(100% - 28mm)!important;margin-left:auto!important;text-align:right!important;padding-right:0!important;min-height:28mm!important;padding-top:3mm!important}
+ .remark-entry{display:none!important}
+}
+
+/* Clean main screen title */
+.top{background:var(--navy);color:#fff;text-align:center;padding:22px 16px;border-radius:10px 10px 0 0}
+.main-page-title{font-size:32px;font-weight:700;line-height:1.35;letter-spacing:.2px}
+@media(max-width:700px){.top{padding:17px 10px}.main-page-title{font-size:25px}}
+
+
+/* Final title and forwarding/stamp layout */
+.main-page-title{font-size:32px!important;font-weight:700}
+.forward-cert{width:calc(100% - 48mm)!important;margin-left:0!important;margin-right:auto!important;text-align:right!important;padding-right:0!important}
+@media print{
+ .forward-cert{width:calc(100% - 48mm)!important;margin-left:0!important;margin-right:auto!important;text-align:right!important;min-height:30mm!important;padding-top:3mm!important}
+}
+.developer-credit{text-align:center;color:#667085;font-size:12px;padding:12px 8px;margin-top:10px}
+@media print{.developer-credit{display:none!important}}
+
+</style>
+</head>
+<body><div class="wrap">
+<header class="top"><div id="headerMonth" class="main-page-title">मासिक सुरक्षा रक्षक हजेरी पत्रक – नोव्हेंबर 2026</div></header>
+<nav class="tabs no-print"><button id="tabAttendance" class="tab active" onclick="showTab('attendance')">मासिक हजेरी पत्रक</button><button id="tabQuick" class="tab" onclick="showTab('quick')">जलद हजेरी भरणे</button><button id="tabGuards" class="tab" onclick="showTab('guards')">सुरक्षा रक्षक व्यवस्थापन</button></nav>
+
+<section id="attendancePanel" class="panel">
+<div class="controls no-print">
+<label class="field">महिना<select id="month"></select></label>
+<label class="field">वर्ष<input id="year" type="number" min="2000" max="2100" value="2026" style="width:90px"></label>
+<label class="field" style="min-width:300px">उपकेंद्राचे नाव (बदलण्यासाठी येथे भरा)<input id="substationName" type="text" value="२२० केव्ही उपकेंद्र वरुड (बेणोडा)" style="min-width:300px"></label>
+<button onclick="window.print()">प्रिंट / PDF</button><button class="alt" onclick="exportExcel()">Excel डाउनलोड (Print सारखे)</button>
+<button class="alt" onclick="backupData()">Backup घ्या</button>
+<button class="alt" onclick="document.getElementById('restoreBackup').click()">Backup Restore</button>
+<input id="restoreBackup" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupFile(event)">
+<button class="alt" onclick="exportCSV()">CSV डाउनलोड</button><button class="alt" onclick="saveData()">बदल जतन करा</button>
+<span id="saveStatus" class="status"></span>
+</div>
+<div class="sheet">
+<div class="print-letterhead">
+  <div class="print-area">कार्यक्षेत्र : अमरावती, यवतमाळ, अकोला, वाशिम, बुलढाणा</div>
+  <div class="print-gov">(महाराष्ट्र शासनाचा उपक्रम)</div>
+  <div class="print-title">उपस्थिती नोंदवही</div>
+  <div class="print-subrow"><span>उपकेंद्राचे नाव : <span id="printSubstationName">२२० केव्ही उपकेंद्र वरुड (बेणोडा)</span></span><span id="printMonth">महिना : नोव्हेंबर - २०२६</span></div>
+</div>
+<table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+<div class="legend"><b>हजेरी संकेत:</b> P = नियमित हजर | WO = साप्ताहिक सुट्टी | WO/P = साप्ताहिक सुट्टीच्या दिवशी काम | ET = अतिरिक्त कर्तव्य | A = गैरहजर</div>
+<div class="note"><b>गणना:</b> हजर दिवस = P; साप्ताहिक सुट्टी = WO आणि WO/P; गैरहजर = A; अतिरिक्त कर्तव्ये = WO/P आणि ET; एकूण कर्तव्ये = P + WO/P + ET. देय कर्तव्यांची अंतिम पडताळणी लागू करार / बिलिंग अटींनुसार करावी.</div>
+<div class="cert"><h3>प्रमाणपत्र</h3>
+<p>१. या महिन्यात सुरक्षा रक्षकांनी नोंदविलेल्या अपवादांव्यतिरिक्त त्यांची कर्तव्ये समाधानकारकरीत्या पार पाडली आहेत, असे प्रमाणित करण्यात येते.</p>
+<p class="cert-edit">२. सुरक्षा रक्षकाच्या पहारा व संरक्षण सेवेदरम्यान नुकसान / हानी : <label>रु. <input id="damageAmount" type="number" min="0" step="0.01" value="0" aria-label="नुकसान किंवा हानीची रक्कम रुपये"></label> <select id="damageStatus" aria-label="नुकसान हानी स्थिती"><option value="नुकसान / हानी झालेली नाही">नुकसान / हानी झालेली नाही</option><option value="नुकसान / हानी झालेली आहे">नुकसान / हानी झालेली आहे</option></select></p>
+<p>३. सुरक्षा रक्षकांनी नेमून दिलेली कर्तव्ये पार पाडताना विहित सुरक्षा साधने व उपकरणांचा वापर केला.</p>
+<p>४. कर्तव्याच्या कालावधीत आढळलेली हानी, नुकसान, घटना किंवा त्रुटी स्वतंत्रपणे नोंदवून सक्षम प्राधिकाऱ्यास कळविण्यात यावी.</p>
+<p>५. हे हजेरी पत्रक कर्तव्य नोंदींशी पडताळून सुरक्षा एजन्सीचे बिल तपासणी व कार्यवाहीसाठी सादर करण्यात येत आहे.</p>
+<div class="remark-entry no-print" style="padding:7px 3px;border-bottom:1px solid #ddd">
+<label for="attendanceRemark" style="font-weight:bold">शेरा / Remark :</label>
+<textarea id="attendanceRemark" rows="2" placeholder="आवश्यक असल्यास येथे शेरा लिहा..." style="display:block;width:100%;margin-top:5px;min-height:48px;resize:vertical"></textarea>
+</div>
+<div id="printRemark" class="print-remark" style="display:none"></div>
+</div>
+<div class="signatures"><div class="sig forward-cert">अग्रेषित / प्रमाणित</div></div>
+</div></section>
+
+
+<section id="quickPanel" class="panel hidden">
+ <div id="quickUpdateMessage" class="status" role="status" aria-live="polite">जलद हजेरी भरल्यानंतर मासिक हजेरी पत्रक टॅबमध्ये नोंदी दिसतील.</div>
+ <div class="quick-workflow"><b>जलद हजेरी भरण्याची पद्धत :</b> १) महिना व रक्षक निवडा → २) संपूर्ण महिन्याची हजेरी (गरज असल्यास) → ३) साप्ताहिक सुट्टी भरा → ४) अपवाद / विशिष्ट तारखांची हजेरी भरा.</div>
+ <div class="quick-step">
+  <h3>१. महिना आणि सुरक्षा रक्षक निवडा</h3>
+  <div class="controls">
+   <label class="field">महिना<select id="quickMonth"></select></label>
+   <label class="field">वर्ष<input id="quickYear" type="number" min="2000" max="2100" value="2026" style="width:90px"></label>
+   <label class="field">सुरक्षा रक्षक
+    <select id="quickGuard" aria-label="जलद हजेरीसाठी सुरक्षा रक्षक निवडा" required style="min-width:260px;cursor:pointer">
+      <option value="">-- सुरक्षा रक्षक निवडा --</option>
+    </select>
+   </label>
+   <span id="quickGuardStatus" class="status">कृपया सुरक्षा रक्षक निवडा.</span>
+   <button class="alt" onclick="saveData()">बदल जतन करा</button>
+   <button type="button" onclick="showTab('attendance')">मासिक हजेरी पत्रक पहा</button>
+  </div>
+ </div>
+ <div class="quick-step">
+  <h3>२. संपूर्ण महिन्याची हजेरी (गरज असल्यास)</h3>
+  <div class="controls">
+   <button onclick="fillMonthP()">संपूर्ण महिना P भरा</button>
+   <button class="alt" onclick="clearMonth()">संपूर्ण महिन्याची हजेरी रिकामी करा</button>
+  </div>
+ </div>
+<div class="quick-step">
+  <h3>३. साप्ताहिक सुट्टी (WO) – वार निवडा आणि एका क्लिकमध्ये भरा</h3>
+  <p class="hint">उदा. एखाद्या रक्षकाची दर बुधवारी सुट्टी असल्यास बुधवार निवडा. एकापेक्षा जास्त वार निवडता येतात.</p>
+  <div class="weekday-grid" id="weekdayGrid">
+   <label><input type="checkbox" value="1"> सोमवार</label><label><input type="checkbox" value="2"> मंगळवार</label><label><input type="checkbox" value="3"> बुधवार</label><label><input type="checkbox" value="4"> गुरुवार</label><label><input type="checkbox" value="5"> शुक्रवार</label><label><input type="checkbox" value="6"> शनिवार</label><label><input type="checkbox" value="0"> रविवार</label>
+  </div>
+  <div class="controls" style="margin:10px 0 0">
+   <label><input type="checkbox" id="weeklyOverwrite"> आधीची नोंद WO ने बदलायची</label>
+   <button onclick="applyWeeklyPattern()">निवडलेल्या वारांना WO भरा</button>
+   <button class="alt" onclick="clearWeeklyPattern()">निवडलेल्या वारांची WO काढा</button>
+  </div>
+  <div class="hint">डीफॉल्टने फक्त रिकाम्या तारखांना WO भरेल. P, A, WO/P आणि ET सुरक्षित राहतील.</div>
+  <div id="weeklyMessage" class="status"></div>
+ </div>
+ <div class="quick-step">
+  <h3>४. अपवाद / विशिष्ट तारखांची हजेरी भरा</h3>
+  <p class="hint">साप्ताहिक सुट्टी भरल्यानंतर ज्या तारखांना वेगळा कोड हवा आहे त्या तारखा लिहा (उदा. 5, 12, 19, 26). नंतर योग्य कोड निवडा. आधीची नोंद बदलायची असल्यासच खालील पर्याय निवडा.</p>
+  <div class="controls">
+   <label class="field">तारखा<input id="quickDates" placeholder="उदा. 5, 12, 19, 26" style="width:220px"></label>
+   <label><input type="checkbox" id="dateOverwrite"> आधीची नोंद बदलायची असल्यास हा पर्याय निवडा</label>
+  </div>
+  <div class="code-buttons">
+   <button class="code-wo" onclick="applyQuickCode('WO')">WO – साप्ताहिक सुट्टी</button>
+   <button class="code-wop" onclick="applyQuickCode('WO/P')">WO/P – सुट्टीत काम</button>
+   <button class="code-et" onclick="applyQuickCode('ET')">ET – अतिरिक्त कर्तव्य</button>
+   <button class="code-p" onclick="applyQuickCode('P')">P – हजर</button>
+   <button class="code-a" onclick="applyQuickCode('A')">A – गैरहजर</button>
+   <button class="alt" onclick="applyQuickCode('')">नोंद रिकामी करा</button>
+  </div>
+  <div id="dateMessage" class="status"></div>
+ </div>
+ </section>
+
+<section id="guardPanel" class="panel hidden">
+<h3 style="margin-top:0;color:#17365d">सुरक्षा रक्षक व्यवस्थापन</h3>
+<p class="hint">या स्वतंत्र विभागातून नवीन सुरक्षा रक्षक जोडा, नाव / पदनाम बदला किंवा रक्षकाची नोंद काढून टाका. हजेरी विभागात रक्षकांची यादी आपोआप अद्ययावत होईल.</p>
+<div class="guard-form">
+<label class="field">सुरक्षा रक्षकाचे पूर्ण नाव<input id="newName" placeholder="उदा. श्री. अ. ब. पाटील"></label>
+<label class="field">नो. क्र.<input id="newGuardNo" placeholder="उदा. १४६"></label>
+<label class="field">पदनाम<input id="newDesig" value="सु. र."></label>
+<button type="button" onclick="addGuardFromForm()">+ सुरक्षा रक्षक जोडा</button>
+</div>
+<div class="controls" style="margin:8px 0">
+ <button type="button" class="alt" onclick="refreshGuardDropdown()">Quick Fill मधील सुरक्षा रक्षकांची यादी अपडेट करा</button>
+</div>
+<div id="guardMessage" class="status" role="status" aria-live="polite">नवीन रक्षक जोडण्यासाठी वर नाव, नो. क्र. व पदनाम भरून “सुरक्षा रक्षक जोडा” दाबा. विद्यमान रक्षक बदलल्यास “जतन” दाबा. त्यानंतर Quick Fill यादी अपडेट होईल.</div>
+<div class="guard-list"><table><thead><tr><th style="width:55px">अ. क्र.</th><th style="width:95px">नो. क्र.</th><th>सुरक्षा रक्षकाचे नाव</th><th style="width:110px">पदनाम</th><th style="width:150px">कृती</th></tr></thead><tbody id="guardList"></tbody></table></div>
+</section>
+<div class="developer-credit">Developed by Prashant D. Patil</div>
+</div>
 <script>
-const KEY='warud_security_attendance_pwa_v1',months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const defaults=[['श्री. डी . डी. बोकडे','१४६','सु. र.'],['श्री. यू . ए. भोसले','१४८','सु. र.'],['श्री. आर. पी. पाटील','१४७','सु. र.'],['श्री. पि .आर. कुडवे','२२३४','सु. र.'],['श्री.व्ही. आर. मंगळे','१२२३','सु. र.'],['श्री.यू. आर. बागडे','१२२०','सु. र.']];
-let S={guards:defaults.map((x,i)=>({id:i+1,name:x[0],number:x[1],designation:x[2],attendance:{}})),month:new Date().getMonth(),year:new Date().getFullYear(),remark:''};
-const $=x=>document.getElementById(x);function key(){return S.year+'-'+String(S.month+1).padStart(2,'0')}function nd(){return new Date(S.year,S.month+1,0).getDate()}
-function persist(){S.month=+$('month').value;S.year=+$('year').value;S.remark=$('remark').value;localStorage.setItem(KEY,JSON.stringify(S))}
-function code(g,d){return g.attendance?.[key()]?.[d]||''}
-function render(){S.month=+$('month').value;S.year=+$('year').value;$('title').textContent=`मासिक सुरक्षा रक्षक हजेरी पत्रक – ${months[S.month]} ${S.year}`;let n=nd();$('tbl').tHead.innerHTML='<tr><th>अ.क्र.</th><th>सुरक्षा रक्षकाचे नाव</th><th>गार्ड क्र.</th>'+Array.from({length:n},(_,i)=>`<th>${i+1}</th>`).join('')+'<th>P</th><th>WO</th><th>A</th><th>ET</th><th>Total</th></tr>';
-let out='';S.guards.forEach((g,i)=>{let v=Array.from({length:n},(_,j)=>code(g,j+1)),p=v.filter(x=>x==='P').length,w=v.filter(x=>['WO','WO/P'].includes(x)).length,a=v.filter(x=>x==='A').length,e=v.filter(x=>x==='ET').length,t=p+v.filter(x=>['WO/P','ET'].includes(x)).length;out+=`<tr><td>${i+1}</td><td class="guard">${g.name}</td><td>${g.number||''}</td>`+v.map((c,j)=>`<td><select data-g="${g.id}" data-d="${j+1}"><option value="">-</option>${['P','WO','WO/P','ET','A'].map(x=>`<option ${c===x?'selected':''}>${x}</option>`).join('')}</select></td>`).join('')+`<td>${p}</td><td>${w}</td><td>${a}</td><td>${e}</td><td><b>${t}</b></td></tr>`});$('tbl').tBodies[0].innerHTML=out;
-$('tbl').querySelectorAll('select[data-g]').forEach(el=>el.onchange=()=>{let g=S.guards.find(x=>x.id==el.dataset.g);g.attendance??={};g.attendance[key()]??={};if(el.value)g.attendance[key()][el.dataset.d]=el.value;else delete g.attendance[key()][el.dataset.d];persist();stats()});stats();$('guards').textContent=S.guards.map(g=>`${g.name} (${g.number||'—'})`).join(' · ')}
-function stats(){let v=S.guards.flatMap(g=>Array.from({length:nd()},(_,i)=>code(g,i+1)));$('p').textContent=v.filter(x=>x==='P').length;$('wo').textContent=v.filter(x=>['WO','WO/P'].includes(x)).length;$('a').textContent=v.filter(x=>x==='A').length;$('ex').textContent=v.filter(x=>['WO/P','ET'].includes(x)).length;$('tot').textContent=v.filter(x=>['P','WO/P','ET'].includes(x)).length}
-function save(){persist();alert('Saved on this device.')}function fill(c){if(!confirm('Fill every day for all guards with '+c+'?'))return;S.guards.forEach(g=>{g.attendance??={};g.attendance[key()]={};for(let d=1;d<=nd();d++)g.attendance[key()][d]=c});persist();render()}function clearMonth(){if(!confirm('Clear this month attendance?'))return;S.guards.forEach(g=>{if(g.attendance)delete g.attendance[key()]});persist();render()}
-function addGuard(){let n=$('newName').value.trim();if(!n)return alert('Enter guard name');S.guards.push({id:Date.now(),name:n,number:$('newNo').value.trim(),attendance:{}});$('newName').value='';$('newNo').value='';persist();render()}
-function dl(name,data,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-function backup(){persist();dl('Warud_Attendance_Backup_'+key()+'.json',JSON.stringify({...S,app:'Warud Security Attendance PWA',version:1,backupDate:new Date().toISOString()},null,2),'application/json')}
-function exportCSV(){persist();let rows=[['220kV Warud (Benoda) Substation'],['Attendance Register',months[S.month],S.year],['Sr No','Guard Name','Guard No',...Array.from({length:nd()},(_,i)=>i+1),'P','WO','A','ET','Total']];S.guards.forEach((g,i)=>{let v=Array.from({length:nd()},(_,j)=>code(g,j+1)),p=v.filter(x=>x==='P').length,w=v.filter(x=>['WO','WO/P'].includes(x)).length,a=v.filter(x=>x==='A').length,e=v.filter(x=>x==='ET').length,t=p+v.filter(x=>['WO/P','ET'].includes(x)).length;rows.push([i+1,g.name,g.number,...v,p,w,a,e,t])});dl('Warud_Attendance_'+key()+'.csv','\\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n'),'text/csv;charset=utf-8')}
-$('restore').onchange=async ev=>{let f=ev.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!Array.isArray(x.guards))throw Error('Invalid backup file');if(!confirm('Replace current app data with this backup?'))return;S={...S,...x};$('month').value=S.month??0;$('year').value=S.year??new Date().getFullYear();$('remark').value=S.remark||'';persist();render();alert('Backup restored.')}catch(e){alert('Restore failed: '+e.message)}ev.target.value=''};
-$('month').onchange=()=>{persist();render()};$('year').onchange=()=>{persist();render()};$('remark').oninput=persist;
-try{let old=JSON.parse(localStorage.getItem(KEY));if(old?.guards)S={...S,...old}}catch(e){}
-$('month').innerHTML=months.map((m,i)=>`<option value="${i}">${m}</option>`).join('');$('month').value=S.month;$('year').value=S.year;$('remark').value=S.remark||'';render();
-if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+const initialData=[{"sr": 1, "name": "श्री. डी . डी. बोकडे", "guardNo": "१४६", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 2, "name": "श्री. यू . ए. भोसले", "guardNo": "१४८", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 3, "name": "श्री. आर. पी. पाटील", "guardNo": "१४७", "designation": "सु. र.", "attendance": ["WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P"]}, {"sr": 4, "name": "श्री. पि .आर. कुडवे", "guardNo": "२२३४", "designation": "सु. र.", "attendance": ["P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P"]}, {"sr": 5, "name": "श्री.व्ही. आर. मंगळे", "guardNo": "१२२३", "designation": "सु. र.", "attendance": ["P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P"]}, {"sr": 6, "name": "श्री.यू. आर. बागडे", "guardNo": "१२२०", "designation": "सु. र.", "attendance": ["P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P"]}];
+let guards=initialData.map(g=>({sr:g.sr,name:g.name,guardNo:g.guardNo,designation:g.designation,months:{"2026-10":[...g.attendance]}}));
+const months=["जानेवारी","फेब्रुवारी","मार्च","एप्रिल","मे","जून","जुलै","ऑगस्ट","सप्टेंबर","ऑक्टोबर","नोव्हेंबर","डिसेंबर"];
+const monthSel=document.getElementById("month"),yearInput=document.getElementById("year");
+months.forEach((m,i)=>{const o=document.createElement("option");o.value=i;o.textContent=m;monthSel.appendChild(o)});monthSel.value="10";
+const quickMonth=document.getElementById("quickMonth"),quickYear=document.getElementById("quickYear");
+months.forEach((m,i)=>{const o=document.createElement("option");o.value=i;o.textContent=m;quickMonth.appendChild(o)});quickMonth.value=monthSel.value;quickYear.value=yearInput.value;
+quickMonth.addEventListener("change",()=>{monthSel.value=quickMonth.value;render();});
+quickYear.addEventListener("change",()=>{yearInput.value=quickYear.value;render();});
+document.getElementById("quickGuard").addEventListener("change",function(){
+ updateQuickGuardStatus();
+});
+
+function updatePrintCustomFields(){
+ const nm=document.getElementById("substationName").value.trim()||"उपकेंद्राचे नाव नमूद नाही";
+ document.getElementById("printSubstationName").textContent=nm;
+ const remark=document.getElementById("attendanceRemark").value.trim();
+ document.getElementById("printRemark").textContent=remark?("शेरा / Remark : "+remark):"शेरा / Remark :";
+}
+document.getElementById("substationName").addEventListener("input",()=>{updatePrintCustomFields();autosave();});
+document.getElementById("attendanceRemark").addEventListener("input",()=>{updatePrintCustomFields();autosave();});
+window.addEventListener("beforeprint",updatePrintCustomFields);
+function mkey(){return `${yearInput.value}-${monthSel.value}`}
+function att(g){const n=daysInMonth(),k=mkey();if(!g.months)g.months={};let a=g.months[k];if(!Array.isArray(a))a=g.months[k]=[];while(a.length<n)a.push("");return a}
+function daysInMonth(){return new Date(Number(yearInput.value),Number(monthSel.value)+1,0).getDate()}
+function esc(s){return String(s??"").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+
+
+function calc(g){const a=att(g).slice(0,daysInMonth());return{p:a.filter(x=>x==="P").length,off:a.filter(x=>x==="WO"||x==="WO/P").length,absent:a.filter(x=>x==="A").length,extra:a.filter(x=>x==="WO/P"||x==="ET").length,total:a.filter(x=>x==="P"||x==="WO/P"||x==="ET").length}}
+function cls(v){return v==="P"?"p":v==="WO"?"off":v==="A"?"abs":(v==="WO/P"||v==="ET")?"offp":""}
+function render(){
+ if(!(+yearInput.value>=2000&&+yearInput.value<=2100))yearInput.value=(+quickYear.value>=2000&&+quickYear.value<=2100)?quickYear.value:"2026";
+ const m=+monthSel.value,y=+yearInput.value,n=daysInMonth();
+ if(quickMonth.value!==String(m))quickMonth.value=String(m);if(quickYear.value!==String(y))quickYear.value=String(y);
+  const yearMr=String(y).replace(/[0-9]/g,d=>"०१२३४५६७८९"[+d]);
+ document.getElementById("printMonth").textContent=`महिना : ${months[m]} - ${yearMr}`;
+ document.getElementById("headerMonth").textContent=`मासिक सुरक्षा रक्षक हजेरी पत्रक – ${months[m]} ${y}`;
+ let head='<tr><th class="sr" rowspan="2">अ. क्र.</th><th class="name" rowspan="2">सुरक्षा रक्षकाचे नाव</th><th class="guardno" rowspan="2">नो. क्र.</th><th class="desig" rowspan="2">पद</th>';
+ for(let day=1;day<=n;day++)head+=`<th class="day">${new Date(y,m,day).toLocaleDateString("mr-IN",{weekday:"short"})}</th>`;
+ head+='<th class="sum" rowspan="2">हजर<br>दिवस</th><th class="sum" rowspan="2">W/O</th><th class="sum" rowspan="2">गैरहजर</th><th class="sum" rowspan="2">अतिरिक्त<br>कर्तव्ये</th><th class="sum" rowspan="2">एकूण<br>कर्तव्ये</th></tr><tr>';
+ for(let day=1;day<=n;day++)head+=`<th class="day">${day}</th>`;head+='</tr>';
+ let rows="";
+ guards.forEach((g,i)=>{const A=att(g);const c=calc(g);
+ rows+=`<tr><td class="sr">${i+1}</td><td class="name">${esc(g.name)}</td><td class="guardno">${esc(g.guardNo||"")}</td><td class="desig">${esc(g.designation||"सु. र.")}</td>`;
+ for(let day=0;day<n;day++){const v=A[day]||"";rows+=`<td class="day ${cls(v)}"><button title="क्लिक करून कोड बदला" onclick="cycleStatus(${i},${day})">${v||"·"}</button></td>`}
+ rows+=`<td class="sum">${c.p}</td><td class="sum">${c.off}</td><td class="sum">${c.absent}</td><td class="sum">${c.extra}</td><td class="sum">${c.total}</td></tr>`;
+ });
+ document.getElementById("thead").innerHTML=head;document.getElementById("tbody").innerHTML=rows;
+ renderGuardList();populateQuickGuard();
+}
+function cycleStatus(i,d){const seq=["","P","WO","A","WO/P","ET"];const a=att(guards[i]);const cur=a[d]||"";a[d]=seq[(seq.indexOf(cur)+1)%seq.length];render();autosave()}
+function populateQuickGuard(){
+ const s=document.getElementById("quickGuard");if(!s)return;
+ const prev=s.value;
+ s.replaceChildren();
+ const placeholder=document.createElement("option");
+ placeholder.value="";placeholder.textContent="-- सुरक्षा रक्षक निवडा --";s.appendChild(placeholder);
+ guards.forEach((g,i)=>{
+   const option=document.createElement("option");
+   option.value=String(i);
+   option.textContent=[String(g.name||"").trim(),g.guardNo?"नो. क्र. "+g.guardNo:""].filter(Boolean).join(" — ");
+   s.appendChild(option);
+ });
+ if(prev!==""&&Number(prev)<guards.length)s.value=prev;
+ updateQuickGuardStatus();
+}
+function updateQuickGuardStatus(){
+ const g=selectedGuard();
+ const status=document.getElementById("quickGuardStatus");
+ if(status){
+   status.textContent=g?`निवडलेले सुरक्षा रक्षक : ${g.name}${g.guardNo?" (नो. क्र. "+g.guardNo+")":""}`:"कृपया सुरक्षा रक्षक निवडा.";
+   status.style.color=g?"#176b3a":"#9a4b00";
+ }
+}
+function selectedGuard(){
+ const s=document.getElementById("quickGuard");
+ if(!s || s.value==="") return null;
+ const idx=Number(s.value);
+ if(!Number.isInteger(idx)||idx<0||idx>=guards.length)return null;
+ return guards[idx];
+}
+function syncQuickPeriod(){
+ monthSel.value=quickMonth.value;
+ yearInput.value=quickYear.value;
+}
+function refreshMonthlyAfterQuickEntry(){
+ syncQuickPeriod();
+ render();
+ autosave();
+ const msg=document.getElementById("quickUpdateMessage");
+ if(msg) msg.textContent="हजेरी नोंदवली आहे. मासिक हजेरी पत्रक टॅब उघडून नोंदी तपासा.";
+}
+function getSelectedWeekdays(){return [...document.querySelectorAll('#weekdayGrid input:checked')].map(x=>+x.value)}
+function applyWeeklyPattern(){
+ syncQuickPeriod();
+ const g=selectedGuard(),days=getSelectedWeekdays();
+ if(!g){alert("कृपया सुरक्षा रक्षक निवडा.");return}
+ if(!days.length){alert("किमान एक वार निवडा.");return}
+ const overwrite=document.getElementById("weeklyOverwrite").checked,n=daysInMonth(),done=[],skipped=[];
+ const A=att(g);
+ for(let day=1;day<=n;day++)if(days.includes(new Date(+yearInput.value,+monthSel.value,day).getDay())){
+   const old=A[day-1]||"";
+   if(old===""||old==="WO"||overwrite){A[day-1]="WO";done.push(day)}else skipped.push(day);
+ }
+ refreshMonthlyAfterQuickEntry();
+ document.getElementById("weeklyMessage").textContent=`${g.name}: ${done.join(", ")||"कोणतीही तारीख नाही"} या तारखांना WO भरले.${skipped.length?" आधीची नोंद असल्याने "+skipped.join(", ")+" वगळल्या.":""}`;
+}
+function clearWeeklyPattern(){
+ syncQuickPeriod();
+ const g=selectedGuard(),days=getSelectedWeekdays();
+ if(!g){alert("कृपया सुरक्षा रक्षक निवडा.");return}
+ if(!days.length){alert("किमान एक वार निवडा.");return}
+ let removed=[];const A=att(g);
+ for(let day=1;day<=daysInMonth();day++)if(days.includes(new Date(+yearInput.value,+monthSel.value,day).getDay())&&A[day-1]==="WO"){A[day-1]="";removed.push(day)}
+ refreshMonthlyAfterQuickEntry();
+ document.getElementById("weeklyMessage").textContent=`${removed.length} WO नोंदी काढल्या (${removed.join(", ")}).`;
+}
+function applyQuickCode(code){
+ syncQuickPeriod();
+ const g=selectedGuard();if(!g){alert("कृपया सुरक्षा रक्षक निवडा.");return}
+ const raw=document.getElementById("quickDates").value.trim().replace(/[०-९]/g,d=>"०१२३४५६७८९".indexOf(d));if(!raw){alert("कृपया तारीख लिहा. उदा. 5, 12, 19");return}
+ const n=daysInMonth(),nums=[...new Set(raw.split(/[,\s;]+/).filter(Boolean).map(Number))];
+ if(nums.some(v=>!Number.isInteger(v)||v<1||v>n)){alert(`योग्य तारीख 1 ते ${n} दरम्यान लिहा.`);return}
+ const A=att(g);
+ const overwrite=document.getElementById("dateOverwrite").checked,done=[],skipped=[];
+ nums.sort((a,b)=>a-b).forEach(day=>{const old=A[day-1]||"";if(old===""||overwrite){A[day-1]=code;done.push(day)}else skipped.push(day)});
+ refreshMonthlyAfterQuickEntry();
+ document.getElementById("dateMessage").textContent=`${g.name}: ${done.join(", ")||"कोणतीही तारीख नाही"} या तारखांना ${code||"रिकामी"} नोंद केली.${skipped.length?" आधीची नोंद असल्याने "+skipped.join(", ")+" वगळल्या.":""}`;
+}
+function fillMonthP(){
+ syncQuickPeriod();
+ const g=selectedGuard();if(!g){alert("कृपया सुरक्षा रक्षक निवडा.");return}
+ if(!confirm(g.name+" यांची संपूर्ण महिन्याची हजेरी P करायची का?"))return;
+ att(g);g.months[mkey()]=Array(daysInMonth()).fill("P");refreshMonthlyAfterQuickEntry();
+}
+function clearMonth(){
+ syncQuickPeriod();
+ const g=selectedGuard();if(!g){alert("कृपया सुरक्षा रक्षक निवडा.");return}
+ if(!confirm(g.name+" यांची संपूर्ण महिन्याची हजेरी रिकामी करायची का?"))return;
+ att(g);g.months[mkey()]=Array(daysInMonth()).fill("");refreshMonthlyAfterQuickEntry();
+}
+function showTab(which){const att=which==="attendance",quick=which==="quick",guard=which==="guards";document.getElementById("attendancePanel").classList.toggle("hidden",!att);document.getElementById("quickPanel").classList.toggle("hidden",!quick);document.getElementById("guardPanel").classList.toggle("hidden",!guard);document.getElementById("tabAttendance").classList.toggle("active",att);document.getElementById("tabQuick").classList.toggle("active",quick);document.getElementById("tabGuards").classList.toggle("active",guard);if(guard)renderGuardList()}
+
+function addGuardFromForm(){
+ const name=document.getElementById("newName").value.trim();
+ const guardNo=document.getElementById("newGuardNo").value.trim();
+ const desig=document.getElementById("newDesig").value.trim()||"सु. र.";
+ if(!name){alert("कृपया सुरक्षा रक्षकाचे पूर्ण नाव भरा.");document.getElementById("newName").focus();return}
+ if(guardNo && guards.some(g=>String(g.guardNo||"").trim()===guardNo)){
+   alert("हा नो. क्र. आधीपासून नोंदवलेला आहे. कृपया वेगळा नो. क्र. भरा.");document.getElementById("newGuardNo").focus();return;
+ }
+ guards.push({sr:guards.length+1,name,guardNo,designation:desig,months:{}});
+ document.getElementById("newName").value="";
+ document.getElementById("newGuardNo").value="";
+ document.getElementById("newDesig").value="सु. र.";
+ render();
+ autosave();
+ renderGuardList();
+ document.getElementById("newName").focus();
+ const msg=document.getElementById("guardMessage");
+ if(msg) msg.textContent=`${name} यांची नोंद यशस्वीरित्या जोडली.`;
+}
+function renderGuardList(){
+ const b=document.getElementById("guardList");if(!b)return;
+ b.replaceChildren();
+ guards.forEach((g,i)=>{
+   const tr=document.createElement("tr");
+   const serial=document.createElement("td");serial.textContent=String(i+1);tr.appendChild(serial);
+   const makeInput=(field,value,label)=>{
+     const td=document.createElement("td"),input=document.createElement("input");
+     input.type="text";input.value=value??"";input.dataset.index=String(i);input.dataset.field=field;
+     input.setAttribute("aria-label",`${label} – ${g.name}`);
+     input.style.width="100%";td.appendChild(input);return td;
+   };
+   tr.appendChild(makeInput("guardNo",g.guardNo,"नो. क्र."));
+   tr.appendChild(makeInput("name",g.name,"सुरक्षा रक्षकाचे नाव"));
+   tr.appendChild(makeInput("designation",g.designation||"सु. र.","पदनाम"));
+   const actions=document.createElement("td");
+   const save=document.createElement("button");save.type="button";save.className="alt";save.textContent="जतन";save.dataset.action="save";save.dataset.index=String(i);
+   const remove=document.createElement("button");remove.type="button";remove.className="danger";remove.textContent="काढा";remove.dataset.action="remove";remove.dataset.index=String(i);remove.style.marginLeft="5px";
+   actions.append(save,remove);tr.appendChild(actions);b.appendChild(tr);
+ });
+}
+function syncQuickGuardNames(){
+ const s=document.getElementById("quickGuard");
+ const oldIndex=s && s.value!=="" ? s.value : "";
+ populateQuickGuard();
+ if(s && oldIndex!=="" && Number(oldIndex)<guards.length) s.value=oldIndex;
+ updateQuickGuardStatus();
+}
+function removeGuard(i){
+ if(!Number.isInteger(i)||i<0||i>=guards.length)return;
+ if(!confirm(guards[i].name+" यांची नोंद व हजेरी कायमची काढून टाकायची आहे का?"))return;
+ const qs=document.getElementById("quickGuard");if(qs)qs.value="";
+ guards.splice(i,1);
+ guards.forEach((g,j)=>g.sr=j+1);
+ render();autosave();renderGuardList();
+ const msg=document.getElementById("guardMessage");
+ if(msg)msg.textContent="निवडलेल्या सुरक्षा रक्षकाची नोंद काढली.";
+}
+
+function downloadBlob(blob,filename){
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportExcel(){
+ updatePrintCustomFields();
+ const table=document.querySelector("#attendancePanel .sheet table").cloneNode(true);
+ table.querySelectorAll("td.day button").forEach(btn=>btn.replaceWith(document.createTextNode(btn.textContent==="·"?"":btn.textContent)));
+ const month=months[+monthSel.value],year=yearInput.value;
+ const sub=document.getElementById("substationName").value.trim();
+ const remark=document.getElementById("attendanceRemark").value.trim();
+ const damage=document.getElementById("damageAmount").value||"0";
+ const damageStatus=document.getElementById("damageStatus").value;
+ const legend=document.querySelector(".legend")?.innerText||"";
+ const note=document.querySelector(".note")?.innerText||"";
+ const cert=[...document.querySelectorAll(".cert p")].map(p=>{
+   if(p.classList.contains("cert-edit"))return `२. सुरक्षा रक्षकाच्या पहारा व संरक्षण सेवेदरम्यान नुकसान / हानी : रु. ${damage} — ${damageStatus}`;
+   return p.innerText;
+ }).join("</p><p>");
+ const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+ @page{size:A3 landscape;margin:8mm}
+ body{font-family:Arial,'Nirmala UI',sans-serif;color:#111;font-size:10pt}
+ .area,.gov,.title{text-align:center;font-weight:bold}.area,.gov{font-size:16pt}.title{font-size:18pt;padding:5px}
+ .subrow{display:flex;justify-content:space-between;font-weight:bold;font-size:12pt;border-bottom:1px solid #222;padding:5px}
+ table{border-collapse:collapse;width:100%;table-layout:fixed;margin-top:8px}
+ th,td{border:1px solid #333;text-align:center;padding:3px 2px;font-size:8pt;vertical-align:middle}
+ th{background:#e8edf5;font-weight:bold}td.name{text-align:left}
+ .legend,.note{font-size:8pt;padding:5px 0}
+ .cert{font-size:9pt;margin-top:8px}.cert h3{text-align:center;font-size:11pt}.cert p{margin:4px 0}
+ .remark{border-bottom:1px solid #222;min-height:35px;padding:7px 2px;font-size:10pt;white-space:pre-wrap}
+ .forward{width:calc(100% - 48mm);text-align:right;margin-top:12px;min-height:30mm;font-weight:bold;font-size:11pt}
+ </style></head><body>
+ <div class="area">कार्यक्षेत्र : अमरावती, यवतमाळ, अकोला, वाशिम, बुलढाणा</div>
+ <div class="gov">(महाराष्ट्र शासनाचा उपक्रम)</div><div class="title">उपस्थिती नोंदवही</div>
+ <div class="subrow"><span>उपकेंद्राचे नाव : ${esc(sub)}</span><span>महिना : ${esc(month)} - ${String(year).replace(/[0-9]/g,d=>"०१२३४५६७८९"[+d])}</span></div>
+ ${table.outerHTML}
+ <div class="legend">${esc(legend)}</div><div class="note">${esc(note)}</div>
+ <div class="cert"><h3>प्रमाणपत्र</h3><p>${cert}</p></div>
+ <div class="remark"><b>शेरा / Remark :</b> ${esc(remark)}</div>
+ <div class="forward">अग्रेषित / प्रमाणित</div>
+ </body></html>`;
+ const blob=new Blob(["\ufeff",html],{type:"application/vnd.ms-excel;charset=utf-8"});
+ downloadBlob(blob,`Warud_Hajeri_${month}_${year}.xls`);
+}
+function backupData(){
+ const payload={app:"Warud Security Attendance",version:1,backupDate:new Date().toISOString(),
+  guards,month:monthSel.value,year:yearInput.value,
+  damageAmount:document.getElementById("damageAmount").value,
+  damageStatus:document.getElementById("damageStatus").value,
+  substationName:document.getElementById("substationName").value,
+  attendanceRemark:document.getElementById("attendanceRemark").value};
+ downloadBlob(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}),
+  `Warud_Security_Attendance_Backup_${yearInput.value}_${months[+monthSel.value]}.json`);
+ const s=document.getElementById("saveStatus");if(s)s.textContent="Backup फाइल डाउनलोड झाली.";
+}
+function restoreBackupFile(event){
+ const file=event.target.files&&event.target.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const d=JSON.parse(reader.result);
+   if(!d||!Array.isArray(d.guards))throw new Error("Invalid backup");
+   if(!confirm("सध्याचा डेटा बदलून निवडलेल्या Backup मधील डेटा Restore करायचा का? आधी सध्याचा Backup घ्या."))return;
+   guards=d.guards.map((g,i)=>({sr:i+1,name:String(g.name||""),guardNo:String(g.guardNo||""),designation:String(g.designation||"सु. र."),months:g.months&&typeof g.months==="object"?g.months:{}}));
+   if(d.month!==undefined)monthSel.value=String(d.month);
+   if(d.year!==undefined)yearInput.value=String(d.year);
+   if(d.damageAmount!==undefined)document.getElementById("damageAmount").value=d.damageAmount;
+   if(d.damageStatus!==undefined)document.getElementById("damageStatus").value=d.damageStatus;
+   if(d.substationName!==undefined)document.getElementById("substationName").value=d.substationName;
+   if(d.attendanceRemark!==undefined)document.getElementById("attendanceRemark").value=d.attendanceRemark;
+   quickMonth.value=monthSel.value;quickYear.value=yearInput.value;
+   render();populateQuickGuard();renderGuardList();updatePrintCustomFields();saveData();
+   alert("Backup यशस्वीरीत्या Restore झाला.");
+  }catch(err){alert("ही Backup फाइल योग्य नाही किंवा वाचता आली नाही.");}
+  finally{event.target.value="";}
+ };
+ reader.readAsText(file,"UTF-8");
+}
+function saveData(){try{localStorage.setItem("warud_security_attendance_mr_v6",JSON.stringify({guards,month:monthSel.value,year:yearInput.value,damageAmount:document.getElementById("damageAmount").value,damageStatus:document.getElementById("damageStatus").value,substationName:document.getElementById("substationName").value,attendanceRemark:document.getElementById("attendanceRemark").value}));document.getElementById("saveStatus").textContent="बदल जतन झाले";}catch(e){alert("जतन करता आले नाही. CSV डाउनलोड करा.");}}
+function autosave(){try{localStorage.setItem("warud_security_attendance_mr_v6",JSON.stringify({guards,month:monthSel.value,year:yearInput.value,damageAmount:document.getElementById("damageAmount").value,damageStatus:document.getElementById("damageStatus").value,substationName:document.getElementById("substationName").value,attendanceRemark:document.getElementById("attendanceRemark").value}));}catch(e){}}
+function exportCSV(){const n=daysInMonth(),m=+monthSel.value,y=+yearInput.value;const rows=[["अ. क्र.","नो. क्र.","सुरक्षा रक्षकाचे नाव","पदनाम",...Array.from({length:n},(_,i)=>`${i+1} ${new Date(y,m,i+1).toLocaleDateString("mr-IN",{weekday:"short"})}`),"हजर दिवस","साप्ताहिक सुट्टी","गैरहजर","अतिरिक्त कर्तव्ये","एकूण कर्तव्ये"]];guards.forEach((g,i)=>{const c=calc(g);rows.push([i+1,g.guardNo||"",g.name,g.designation,...att(g).slice(0,n),c.p,c.off,c.absent,c.extra,c.total])});const csv=rows.map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`Warud_Hajeri_${months[m]}_${y}.csv`;a.click();URL.revokeObjectURL(url)}
+monthSel.addEventListener("change",render);yearInput.addEventListener("change",render);document.getElementById("damageAmount").addEventListener("input",autosave);document.getElementById("damageStatus").addEventListener("change",autosave);
+try{const saved=["v6","v5","v4","v3","v2"].map(v=>localStorage.getItem("warud_security_attendance_mr_"+v)).find(Boolean);
+if(saved){const d=JSON.parse(saved);
+ const fixCode=x=>x==="OFF"||x==="0FF"?"WO":x==="OFF+P"||x==="0FF+P"?"WO/P":x;
+ const dev=t=>/[०-९]/.test(t)&&/[0-9]/.test(t)?t.replace(/[0-9]/g,c=>"०१२३४५६७८९"[+c]):t;
+ const tail=/\s*(?:नो\.?\s*क्र\.?|नं\.?)\s*([०-९0-9]+)\s*$/;
+ if(Array.isArray(d.guards))guards=d.guards.map((g,i)=>{
+   const months={};
+   if(g.months&&typeof g.months==="object")Object.keys(g.months).forEach(k=>{months[k]=(g.months[k]||[]).map(fixCode)});
+   else if(Array.isArray(g.attendance)&&d.year!==undefined&&d.month!==undefined)months[`${d.year}-${d.month}`]=g.attendance.map(fixCode);
+   const rawName=String(g.name||""),m=rawName.match(tail);
+   return{sr:i+1,name:rawName.replace(tail,"").trim(),guardNo:dev(String(g.guardNo||(m?m[1]:""))),designation:g.designation||"सु. र.",months};
+ });
+ if(d.damageAmount!==undefined)document.getElementById("damageAmount").value=d.damageAmount;
+ if(d.damageStatus)document.getElementById("damageStatus").value=d.damageStatus;
+ if(d.substationName)document.getElementById("substationName").value=d.substationName;
+ if(d.attendanceRemark)document.getElementById("attendanceRemark").value=d.attendanceRemark;
+ if(d.month!==undefined)monthSel.value=String(d.month);
+ if(d.year)yearInput.value=d.year}}catch(e){}
+// Security guard management: delegated handlers remain active after list redraws.
+const guardListBody=document.getElementById("guardList");
+if(guardListBody){
+ guardListBody.addEventListener("input",function(ev){
+   const el=ev.target;
+   if(!el.matches("input[data-index][data-field]"))return;
+   const i=Number(el.dataset.index),field=el.dataset.field;
+   if(!Number.isInteger(i)||!guards[i]||!["name","guardNo","designation"].includes(field))return;
+   guards[i][field]=el.value;
+   autosave();
+   if(field==="name"||field==="guardNo")syncQuickGuardNames();
+ });
+ guardListBody.addEventListener("change",function(ev){
+   const el=ev.target;
+   if(!el.matches("input[data-index][data-field]"))return;
+   const i=Number(el.dataset.index);
+   if(!Number.isInteger(i)||!guards[i])return;
+   guards[i].name=guards[i].name.trim();
+   guards[i].guardNo=guards[i].guardNo.trim();
+   guards[i].designation=(guards[i].designation||"").trim()||"सु. र.";
+   render();autosave();renderGuardList();
+ });
+ guardListBody.addEventListener("click",function(ev){
+   const btn=ev.target.closest("button[data-action]");
+   if(!btn)return;
+   const i=Number(btn.dataset.index);
+   if(btn.dataset.action==="save"){
+     if(!guards[i])return;
+     guards[i].name=String(guards[i].name||"").trim();
+     guards[i].guardNo=String(guards[i].guardNo||"").trim();
+     guards[i].designation=String(guards[i].designation||"").trim()||"सु. र.";
+     if(!guards[i].name){alert("सुरक्षा रक्षकाचे नाव रिकामे ठेवता येणार नाही.");renderGuardList();return}
+     const duplicate=guards.some((g,j)=>j!==i&&guards[i].guardNo&&String(g.guardNo||"").trim()===guards[i].guardNo);
+     if(duplicate){alert("हा नो. क्र. दुसऱ्या सुरक्षा रक्षकासाठी वापरला आहे.");return}
+     render();autosave();populateQuickGuard();renderGuardList();
+     const msg=document.getElementById("guardMessage");if(msg)msg.textContent="सुरक्षा रक्षकाची माहिती जतन झाली.";
+   } else if(btn.dataset.action==="remove") removeGuard(i);
+ });
+}
+renderGuardList();
+updatePrintCustomFields();
+render();
 </script></body></html>
