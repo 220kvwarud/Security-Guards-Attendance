@@ -2,7 +2,7 @@
 {
   "name": "Warud Security Attendance",
   "short_name": "Warud Attendance",
-  "description": "220kV Warud Security Attendance",
+  "description": "Official Monthly Security Guard Attendance Register of 220kV Warud (Benoda) Substation.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
