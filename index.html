@@ -129,52 +129,112 @@ td.day button{font-size:14px;padding:4px 0}
 /* Restored quick attendance sub-section */
 #quickPanel { margin-top: 14px; }
 #quickPanel .quick-workflow { border-left: 4px solid var(--accent, #2563eb); }
-#quickEntryToggle[aria-expanded="true"] { outline: 2px solid currentColor; outline-offset: 2px; }
+#quickEntryToggle[aria-expanded="true"] { outline: 2px solid currentColor; outline-offset: 2px; background:#e7f0f8!important; }
+#quickPanel{position:relative;scroll-margin-top:14px;border-top:4px solid #1769aa!important}
+#quickPanel.hidden{display:none!important}
+
+/* Common-user usability refresh */
+:root{--navy:#123456;--blue:#1769aa;--line:#d7e0e9;--ink:#172334;--muted:#526477;--surface:#fff;--soft:#f3f7fb;--green:#e8f5ec;--amber:#fff7df}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans Devanagari","Nirmala UI","Segoe UI",Arial,sans-serif!important;font-size:15px!important;line-height:1.5!important;background:#f3f6fa!important;color:var(--ink)}
+.wrap{max-width:1600px!important;margin:18px auto!important;padding:0 14px!important}
+.top{padding:20px 16px!important;border-radius:14px 14px 0 0!important;background:linear-gradient(125deg,#102e50,#1d5f95)!important}
+.top h2{font-size:clamp(19px,2.2vw,25px)!important;line-height:1.35}
+.top div{font-size:14px!important;opacity:.95}
+.tabs{gap:10px!important;padding:12px!important;border-radius:0 0 12px 12px!important;box-shadow:0 3px 12px #102e5010;position:sticky;top:0;z-index:20}
+.tab{flex:1;min-height:50px!important;padding:12px 16px!important;border-radius:9px!important;font-size:15px!important;white-space:normal;line-height:1.35}
+.tab:not(.active){background:#edf3f8!important;color:#17365d!important}
+.tab.active{background:#1769aa!important;box-shadow:0 3px 8px #1769aa30}
+.panel{border:1px solid #d7e0e9!important;border-radius:12px!important;padding:clamp(13px,2vw,20px)!important;margin:12px 0 16px!important;box-shadow:0 3px 14px #102e500b}
+.controls{gap:12px!important;margin:12px 0 16px!important}
+.field{font-size:14px!important;color:#33485e!important;gap:6px!important}
+input,select,textarea{min-height:42px!important;border:1px solid #aebdca!important;border-radius:8px!important;padding:9px 11px!important;font-size:15px!important;background:#fff!important}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #8bc5f5!important;outline-offset:2px!important}
+button{min-height:42px!important;border-radius:8px!important;padding:10px 15px!important;font-size:14px!important;line-height:1.3!important;transition:filter .15s,transform .15s}
+button:hover{filter:brightness(.96);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+button.alt{background:#fff!important;color:#17527f!important;border:1px solid #8daec8!important}
+button.danger{background:#a93226!important;color:#fff!important}
+.hint{font-size:13px!important;line-height:1.65!important;color:#526477!important}
+.status{font-size:13px!important;font-weight:700}
+.quick{padding:14px!important;border-radius:10px!important}
+.quick-workflow{border-radius:10px!important;background:#edf5fc!important;padding:14px!important;font-size:14px!important}
+.quick-step{border:1px solid #d7e2ec!important;background:#fff!important;border-radius:11px!important;padding:16px!important;margin:13px 0!important;box-shadow:0 2px 8px #102e5008}
+.quick-step h3{font-size:16px!important;line-height:1.4!important;margin-bottom:10px!important}
+.weekday-grid{gap:9px!important}
+.weekday-grid label{min-height:48px;display:flex;align-items:center;justify-content:center;gap:5px;border-radius:9px!important;font-size:14px!important}
+.weekday-grid input{min-height:auto!important;width:18px;height:18px}
+.code-buttons{gap:9px!important}
+.code-buttons button{min-height:46px!important;min-width:145px}
+.sheet{border:1px solid #d9e2ec;border-radius:10px;padding:12px!important}
+table{border-radius:8px;overflow:hidden}
+th,td{line-height:1.35}
+.guard-form{gap:12px!important}
+.guard-list{max-width:100%!important}
+.guard-list table{border:1px solid #d9e2ec;border-radius:9px;overflow:hidden}
+.guard-list td{vertical-align:middle}
+.developer-credit{padding:12px;text-align:center;color:#718096;font-size:12px}
+.section-intro{background:#f0f6fb;border:1px solid #d6e5f1;border-left:4px solid #1769aa;border-radius:9px;padding:12px 14px;margin:0 0 14px;color:#27445e;font-size:14px;line-height:1.6}
+.section-intro b{color:#123456}
+.help-chip{display:inline-block;background:#e7f0f8;color:#174a75;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:700;margin:3px 3px 0 0}
+#quickEntryToggle{min-width:190px}
+@media(max-width:760px){
+ .wrap{padding:0 8px!important;margin:8px auto!important}
+ .tabs{position:static;display:grid!important;grid-template-columns:1fr;gap:7px!important}
+ .tab{width:100%;text-align:left;min-height:48px!important}
+ .controls{align-items:stretch!important}
+ .controls>.field,.controls>label.field{width:100%!important;min-width:0!important}
+ .controls input:not([type=checkbox]),.controls select{width:100%!important;max-width:100%!important}
+ .controls>button{width:100%}
+ .weekday-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .code-buttons button{flex:1 1 44%;min-width:0}
+ .guard-list{overflow-x:auto}
+ .guard-list table{min-width:650px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
+
+
+.main-page-title{font-size:20px!important;font-weight:800!important;line-height:1.45!important;text-align:center!important}
+@media(max-width:600px){.main-page-title{font-size:20px!important}}
+
+/* Final navigation architecture: one shared content area and three persistent tabs */
+.main-page-title{font-size:20px!important;font-weight:800!important;line-height:1.45!important;text-align:center!important}
+.tabs[role="tablist"]{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important}
+.tabs[role="tablist"] .tab{min-height:54px!important;font-weight:800!important}
+.tabs[role="tablist"] .tab.active{background:#1769aa!important;color:#fff!important}
+#attendancePanel,#shiftPanel,#guardPanel{width:100%;margin:14px 0!important;scroll-margin-top:12px}
+#shiftPanel iframe{min-height:1450px}
+.section-intro{font-size:14px!important}
+#quickPanel{margin:14px 0!important}
+@media(max-width:680px){
+ .tabs[role="tablist"]{grid-template-columns:1fr!important}
+ .tabs[role="tablist"] .tab{text-align:left!important}
+}
+@media print{
+ .tabs,.no-print{display:none!important}
+ #attendancePanel,#shiftPanel,#guardPanel{display:block!important}
+}
 </style>
 </head>
 <body><div class="wrap">
-<header class="top"><div id="headerMonth" class="main-page-title">मासिक सुरक्षा रक्षक हजेरी पत्रक – नोव्हेंबर 2026</div></header>
-<nav class="tabs no-print"><button id="tabAttendance" class="tab active" onclick="showTab('attendance')">हजेरी</button><button id="tabShift" class="tab" onclick="showTab('shift')">शिफ्ट ड्युटी चार्ट</button><button id="tabGuards" class="tab" onclick="showTab('guards')">सुरक्षा रक्षक तपशील</button></nav>
+<header class="top"><div id="headerMonth" class="main-page-title">मासिक सुरक्षा रक्षक उपस्थिती आणि पाळी कर्तव्य तक्ता</div></header>
+<nav class="tabs no-print" role="tablist" aria-label="मुख्य विभाग"><button id="tabAttendance" class="tab active" role="tab" aria-selected="true" aria-controls="attendancePanel" onclick="showTab('attendance')">हजेरी</button><button id="tabShift" class="tab" role="tab" aria-selected="false" aria-controls="shiftPanel" onclick="showTab('shift')">पाळी कर्तव्य तक्ता</button><button id="tabGuards" class="tab" role="tab" aria-selected="false" aria-controls="guardPanel" onclick="showTab('guards')">सुरक्षा रक्षकांची माहिती</button></nav>
 
-<section id="attendancePanel" class="panel">
+<section id="attendancePanel" class="panel" role="tabpanel" aria-hidden="false">
+<div class="section-intro"><b>हजेरी कशी भरावी?</b> प्रथम महिना आणि वर्ष निवडा. नंतर खालील तक्त्यात संबंधित तारखेच्या चौकटीवर क्लिक करून हजेरी संकेत निवडा. अनेक रक्षकांची हजेरी एकाच वेळी भरण्यासाठी <b>जलद हजेरी भरणे</b> वापरा. बदल आपोआप जतन होतात.</div>
 <div class="controls no-print">
 <label class="field">महिना<select id="month"></select></label>
 <label class="field">वर्ष<input id="year" type="number" min="2000" max="2100" value="2026" style="width:90px"></label>
 <label class="field" style="min-width:300px">उपकेंद्राचे नाव (बदलण्यासाठी येथे भरा)<input id="substationName" type="text" value="२२० केव्ही उपकेंद्र वरुड (बेणोडा)" style="min-width:300px"></label>
-<button type="button" class="alt" onclick="toggleQuickPanel()">जलद हजेरी भरणे</button><button onclick="window.print()">प्रिंट / PDF</button><button class="alt" onclick="exportExcel()">Excel डाउनलोड (Print सारखे)</button>
+<button type="button" class="alt" id="quickEntryToggle" aria-expanded="false" aria-controls="quickPanel" onclick="toggleQuickPanel()">जलद हजेरी भरणे ▼</button><button onclick="window.print()">प्रिंट / PDF</button><button class="alt" onclick="exportExcel()">Excel डाउनलोड (Print सारखे)</button>
 <button class="alt" onclick="backupData()">Backup घ्या</button>
 <button class="alt" onclick="document.getElementById('restoreBackup').click()">Backup Restore</button>
 <input id="restoreBackup" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupFile(event)">
 <button class="alt" onclick="exportCSV()">CSV डाउनलोड</button><button class="alt" onclick="saveData()">बदल जतन करा</button>
 <span id="saveStatus" class="status"></span>
 </div>
-<div class="sheet">
-<div class="print-letterhead">
-  <div class="print-area">कार्यक्षेत्र : अमरावती, यवतमाळ, अकोला, वाशिम, बुलढाणा</div>
-  <div class="print-gov">(महाराष्ट्र शासनाचा उपक्रम)</div>
-  <div class="print-title">उपस्थिती नोंदवही</div>
-  <div class="print-subrow"><span>उपकेंद्राचे नाव : <span id="printSubstationName">२२० केव्ही उपकेंद्र वरुड (बेणोडा)</span></span><span id="printMonth">महिना : नोव्हेंबर - २०२६</span></div>
-</div>
-<table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
-<div class="legend"><b>हजेरी संकेत:</b> P = नियमित हजर | WO = साप्ताहिक सुट्टी | WO/P = साप्ताहिक सुट्टीच्या दिवशी काम | ET = अतिरिक्त कर्तव्य | A = गैरहजर</div>
-<div class="note"><b>गणना:</b> हजर दिवस = P; साप्ताहिक सुट्टी = WO आणि WO/P; गैरहजर = A; अतिरिक्त कर्तव्ये = WO/P आणि ET; एकूण कर्तव्ये = P + WO/P + ET. देय कर्तव्यांची अंतिम पडताळणी लागू करार / बिलिंग अटींनुसार करावी.</div>
-<div class="cert"><h3>प्रमाणपत्र</h3>
-<p>१. या महिन्यात सुरक्षा रक्षकांनी नोंदविलेल्या अपवादांव्यतिरिक्त त्यांची कर्तव्ये समाधानकारकरीत्या पार पाडली आहेत, असे प्रमाणित करण्यात येते.</p>
-<p class="cert-edit">२. सुरक्षा रक्षकाच्या पहारा व संरक्षण सेवेदरम्यान नुकसान / हानी : <label>रु. <input id="damageAmount" type="number" min="0" step="0.01" value="0" aria-label="नुकसान किंवा हानीची रक्कम रुपये"></label> <select id="damageStatus" aria-label="नुकसान हानी स्थिती"><option value="नुकसान / हानी झालेली नाही">नुकसान / हानी झालेली नाही</option><option value="नुकसान / हानी झालेली आहे">नुकसान / हानी झालेली आहे</option></select></p>
-<p>३. सुरक्षा रक्षकांनी नेमून दिलेली कर्तव्ये पार पाडताना विहित सुरक्षा साधने व उपकरणांचा वापर केला.</p>
-<p>४. कर्तव्याच्या कालावधीत आढळलेली हानी, नुकसान, घटना किंवा त्रुटी स्वतंत्रपणे नोंदवून सक्षम प्राधिकाऱ्यास कळविण्यात यावी.</p>
-<p>५. हे हजेरी पत्रक कर्तव्य नोंदींशी पडताळून सुरक्षा एजन्सीचे बिल तपासणी व कार्यवाहीसाठी सादर करण्यात येत आहे.</p>
-<div class="remark-entry no-print" style="padding:7px 3px;border-bottom:1px solid #ddd">
-<label for="attendanceRemark" style="font-weight:bold">शेरा / Remark :</label>
-<textarea id="attendanceRemark" rows="2" placeholder="आवश्यक असल्यास येथे शेरा लिहा..." style="display:block;width:100%;margin-top:5px;min-height:48px;resize:vertical"></textarea>
-</div>
-<div id="printRemark" class="print-remark" style="display:none"></div>
-</div>
-<div class="signatures"><div class="sig forward-cert">अग्रेषित / प्रमाणित</div></div>
-</div></section>
-
-
 <section id="quickPanel" class="panel hidden">
+<div class="section-intro"><b>जलद हजेरी – सोपी पद्धत</b> खालील क्रमाने काम करा: रक्षक निवडा → आवश्यक असल्यास पूर्ण महिन्याची P भरा → साप्ताहिक सुट्टी निवडा → अपवादाच्या तारखांना योग्य संकेत भरा. आधीची नोंद बदलायची नसेल तर overwrite पर्याय निवडू नका.</div>
  <div id="quickUpdateMessage" class="status" role="status" aria-live="polite">जलद हजेरी भरल्यानंतर मासिक हजेरी पत्रक टॅबमध्ये नोंदी दिसतील.</div>
  <div class="quick-workflow"><b>जलद हजेरी भरण्याची पद्धत :</b> १) महिना व रक्षक निवडा → २) संपूर्ण महिन्याची हजेरी (गरज असल्यास) → ३) साप्ताहिक सुट्टी भरा → ४) अपवाद / विशिष्ट तारखांची हजेरी भरा.</div>
  <div class="quick-step">
@@ -231,8 +291,36 @@ td.day button{font-size:14px;padding:4px 0}
   <div id="dateMessage" class="status"></div>
  </div>
  </section>
+<div class="sheet">
+<div class="print-letterhead">
+  <div class="print-area">कार्यक्षेत्र : अमरावती, यवतमाळ, अकोला, वाशिम, बुलढाणा</div>
+  <div class="print-gov">(महाराष्ट्र शासनाचा उपक्रम)</div>
+  <div class="print-title">उपस्थिती नोंदवही</div>
+  <div class="print-subrow"><span>उपकेंद्राचे नाव : <span id="printSubstationName">२२० केव्ही उपकेंद्र वरुड (बेणोडा)</span></span><span id="printMonth">महिना : नोव्हेंबर - २०२६</span></div>
+</div>
+<table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+<div class="legend"><b>हजेरी संकेत:</b> P = नियमित हजर | WO = साप्ताहिक सुट्टी | WO/P = साप्ताहिक सुट्टीच्या दिवशी काम | ET = अतिरिक्त कर्तव्य | A = गैरहजर</div>
+<div class="note"><b>गणना:</b> हजर दिवस = P; साप्ताहिक सुट्टी = WO आणि WO/P; गैरहजर = A; अतिरिक्त कर्तव्ये = WO/P आणि ET; एकूण कर्तव्ये = P + WO/P + ET. देय कर्तव्यांची अंतिम पडताळणी लागू करार / बिलिंग अटींनुसार करावी.</div>
+<div class="cert"><h3>प्रमाणपत्र</h3>
+<p>१. या महिन्यात सुरक्षा रक्षकांनी नोंदविलेल्या अपवादांव्यतिरिक्त त्यांची कर्तव्ये समाधानकारकरीत्या पार पाडली आहेत, असे प्रमाणित करण्यात येते.</p>
+<p class="cert-edit">२. सुरक्षा रक्षकाच्या पहारा व संरक्षण सेवेदरम्यान नुकसान / हानी : <label>रु. <input id="damageAmount" type="number" min="0" step="0.01" value="0" aria-label="नुकसान किंवा हानीची रक्कम रुपये"></label> <select id="damageStatus" aria-label="नुकसान हानी स्थिती"><option value="नुकसान / हानी झालेली नाही">नुकसान / हानी झालेली नाही</option><option value="नुकसान / हानी झालेली आहे">नुकसान / हानी झालेली आहे</option></select></p>
+<p>३. सुरक्षा रक्षकांनी नेमून दिलेली कर्तव्ये पार पाडताना विहित सुरक्षा साधने व उपकरणांचा वापर केला.</p>
+<p>४. कर्तव्याच्या कालावधीत आढळलेली हानी, नुकसान, घटना किंवा त्रुटी स्वतंत्रपणे नोंदवून सक्षम प्राधिकाऱ्यास कळविण्यात यावी.</p>
+<p>५. हे हजेरी पत्रक कर्तव्य नोंदींशी पडताळून सुरक्षा एजन्सीचे बिल तपासणी व कार्यवाहीसाठी सादर करण्यात येत आहे.</p>
+<div class="remark-entry no-print" style="padding:7px 3px;border-bottom:1px solid #ddd">
+<label for="attendanceRemark" style="font-weight:bold">शेरा / Remark :</label>
+<textarea id="attendanceRemark" rows="2" placeholder="आवश्यक असल्यास येथे शेरा लिहा..." style="display:block;width:100%;margin-top:5px;min-height:48px;resize:vertical"></textarea>
+</div>
+<div id="printRemark" class="print-remark" style="display:none"></div>
+</div>
+<div class="signatures"><div class="sig forward-cert">अग्रेषित / प्रमाणित</div></div>
+</div></section>
 
-<section id="guardPanel" class="panel hidden">
+
+
+
+<section id="guardPanel" class="panel hidden" role="tabpanel" aria-hidden="true">
+<div class="section-intro"><b>सुरक्षा रक्षकांची माहिती</b> नवीन रक्षकाचे नाव, नो. क्र. आणि पदनाम भरून जोडा. येथे केलेले बदल हजेरी आणि शिफ्ट ड्युटी चार्टमध्ये वापरले जातील. जुनी नोंद बदलताना योग्य रक्षक निवडल्याची खात्री करा.</div>
 <h3 style="margin-top:0;color:#17365d">सुरक्षा रक्षक व्यवस्थापन</h3>
 <p class="hint">या स्वतंत्र विभागातून नवीन सुरक्षा रक्षक जोडा, नाव / पदनाम बदला किंवा रक्षकाची नोंद काढून टाका. हजेरी विभागात रक्षकांची यादी आपोआप अद्ययावत होईल.</p>
 <div class="guard-form">
@@ -244,12 +332,10 @@ td.day button{font-size:14px;padding:4px 0}
 <div class="controls" style="margin:8px 0">
  <button type="button" class="alt" onclick="refreshGuardDropdown()">Quick Fill मधील सुरक्षा रक्षकांची यादी अपडेट करा</button>
 </div>
-<div id="guardMessage" class="status" role="status" aria-live="polite">नवीन रक्षक जोडण्यासाठी वर नाव, नो. क्र. व पदनाम भरून “सुरक्षा रक्षक जोडा” दाबा. विद्यमान रक्षक बदलल्यास “जतन” दाबा. त्यानंतर Quick Fill यादी अपडेट होईल.</div>
+<div id="guardMessage" class="status" role="status" aria-live="polite">नवीन रक्षक जोडण्यासाठी वर नाव, नो. क्र. व पदनाम भरा आणि “सुरक्षा रक्षक जोडा” दाबा. विद्यमान रक्षकाची माहिती बदलल्यास “जतन” दाबा. यादी हजेरी व शिफ्ट चार्टमध्ये उपलब्ध होईल.</div>
 <div class="guard-list"><table><thead><tr><th style="width:55px">अ. क्र.</th><th style="width:95px">नो. क्र.</th><th>सुरक्षा रक्षकाचे नाव</th><th style="width:110px">पदनाम</th><th style="width:150px">कृती</th></tr></thead><tbody id="guardList"></tbody></table></div>
 </section>
-<div class="developer-credit">Developed by Prashant D. Patil</div>
-</div>
-<section id="shiftPanel" class="hidden" style="margin-top:12px"><iframe id="shiftFrame" title="सुरक्षा रक्षक शिफ्ट ड्युटी चार्ट" style="display:block;width:100%;height:1450px;border:0;border-radius:10px;background:#fff" loading="lazy" srcdoc="&lt;!DOCTYPE html&gt;
+<section id="shiftPanel" class="hidden" role="tabpanel" aria-hidden="true" style="margin-top:12px"><iframe id="shiftFrame" title="सुरक्षा रक्षक शिफ्ट ड्युटी चार्ट" style="display:block;width:100%;height:1450px;border:0;border-radius:10px;background:#fff" loading="lazy" srcdoc="&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;mr&quot;&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;UTF-8&quot;&gt;
@@ -312,6 +398,29 @@ tfoot th{background:#e7eff7;position:sticky;bottom:0;z-index:2}
  .sign{display:flex;margin-top:8px}.sign div{font-size:14px;font-weight:900;padding-top:18px;width:65mm}
  @page{size:A3 landscape;margin:5mm}
 }
+
+/* User-friendly shift chart controls */
+body{font-family:&quot;Noto Sans Devanagari&quot;,&quot;Nirmala UI&quot;,&quot;Segoe UI&quot;,Arial,sans-serif!important;font-size:14px!important;line-height:1.5!important;background:#f3f6fa!important}
+header{padding:20px!important;background:linear-gradient(125deg,#102e50,#1d5f95)!important}
+header h1{font-size:clamp(19px,2.2vw,25px)!important}
+header h2{font-size:14px!important}
+.doc{font-size:18px!important;letter-spacing:0!important}
+main{margin:12px auto!important;padding:0 12px 24px!important}
+.panel,.tablebox,.legend{border-radius:11px!important;box-shadow:0 3px 12px #102e500b!important;border-color:#d7e0e9!important}
+.toolbar{gap:12px!important;padding:16px!important}
+.field{gap:6px!important}
+.field label{font-size:12px!important;text-transform:none!important}
+input,select,button{min-height:42px!important;border-radius:8px!important;padding:9px 11px!important;font-size:14px!important}
+button{transition:filter .15s,transform .15s}
+button:hover{filter:brightness(.96);transform:translateY(-1px)}
+button:focus-visible,input:focus,select:focus{outline:3px solid #8bc5f5!important;outline-offset:2px!important}
+.info{font-size:13px!important;line-height:1.6!important;border-radius:9px!important}
+.actions{gap:8px!important}
+.tablebox{overflow:auto!important}
+table{font-size:13px!important}
+th,td{padding:7px 5px!important;line-height:1.4!important}
+@media(max-width:760px){main{padding:0 7px 18px!important}.toolbar{align-items:stretch!important}.toolbar .field{width:100%!important}.toolbar input,.toolbar select{width:100%!important}.actions{margin-left:0!important}.actions button{flex:1 1 45%}}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -497,6 +606,9 @@ window.addEventListener(&quot;storage&quot;,e=&gt;{if(e.key===ATT_KEY)render()})
 window.addEventListener(&quot;message&quot;,e=&gt;{if(e.data===&quot;WARUD_GUARDS_UPDATED&quot;||e.data?.type===&quot;WARUD_GUARDS_UPDATED&quot;){if(e.data?.substationName&amp;&amp;!$(&quot;shiftSubstationName&quot;).value.trim()){$(&quot;shiftSubstationName&quot;).value=e.data.substationName;setSubstationName(e.data.substationName)}render()}});
 &lt;/script&gt;
 &lt;/body&gt;&lt;/html&gt;"></iframe></section>
+<div class="developer-credit">Developed by Prashant D. Patil</div>
+</div>
+
 <script>
 const initialData=[{"sr": 1, "name": "श्री. डी . डी. बोकडे", "guardNo": "१४६", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 2, "name": "श्री. यू . ए. भोसले", "guardNo": "१४८", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 3, "name": "श्री. आर. पी. पाटील", "guardNo": "१४७", "designation": "सु. र.", "attendance": ["WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P"]}, {"sr": 4, "name": "श्री. पि .आर. कुडवे", "guardNo": "२२३४", "designation": "सु. र.", "attendance": ["P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P"]}, {"sr": 5, "name": "श्री.व्ही. आर. मंगळे", "guardNo": "१२२३", "designation": "सु. र.", "attendance": ["P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P"]}, {"sr": 6, "name": "श्री.यू. आर. बागडे", "guardNo": "१२२०", "designation": "सु. र.", "attendance": ["P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P"]}];
 let guards=initialData.map(g=>({uid:"guard-"+String(g.guardNo||g.sr),sr:g.sr,name:g.name,guardNo:g.guardNo,designation:g.designation,months:{"2026-10":[...g.attendance]}}));
@@ -643,21 +755,47 @@ function clearMonth(){
  att(g);g.months[mkey()]=Array(daysInMonth()).fill("");refreshMonthlyAfterQuickEntry();
 }
 function showTab(which){
- const att=which==="attendance",guard=which==="guards",shift=which==="shift";
- document.getElementById("attendancePanel").classList.toggle("hidden",!att);
- document.getElementById("quickPanel").classList.add("hidden");
- const quickToggle=document.getElementById("quickEntryToggle");
- if(quickToggle)quickToggle.setAttribute("aria-expanded","false");
- document.getElementById("guardPanel").classList.toggle("hidden",!guard);
- document.getElementById("shiftPanel").classList.toggle("hidden",!shift);
- document.getElementById("tabAttendance").classList.toggle("active",att);
- document.getElementById("tabGuards").classList.toggle("active",guard);
- document.getElementById("tabShift").classList.toggle("active",shift);
- if(guard)renderGuardList();
- if(shift){
+ const panels={
+   attendance:document.getElementById("attendancePanel"),
+   shift:document.getElementById("shiftPanel"),
+   guards:document.getElementById("guardPanel")
+ };
+ const tabs={
+   attendance:document.getElementById("tabAttendance"),
+   shift:document.getElementById("tabShift"),
+   guards:document.getElementById("tabGuards")
+ };
+ Object.entries(panels).forEach(([key,panel])=>{
+   const selected=key===which;
+   panel.classList.toggle("hidden",!selected);
+   panel.setAttribute("aria-hidden",String(!selected));
+ });
+ Object.entries(tabs).forEach(([key,tab])=>{
+   const selected=key===which;
+   tab.classList.toggle("active",selected);
+   tab.setAttribute("aria-selected",String(selected));
+   tab.setAttribute("tabindex",selected?"0":"-1");
+ });
+ // Close expanded quick-entry section when leaving attendance.
+ if(which!=="attendance"){
+   const quick=document.getElementById("quickPanel");
+   const toggle=document.getElementById("quickEntryToggle");
+   if(quick)quick.classList.add("hidden");
+   if(toggle){
+     toggle.setAttribute("aria-expanded","false");
+     toggle.textContent="जलद हजेरी भरणे ▼";
+   }
+ }
+ if(which==="guards")renderGuardList();
+ if(which==="shift"){
    autosave();
-   const f=document.getElementById("shiftFrame");
-   if(f&&f.contentWindow)f.contentWindow.postMessage({type:"WARUD_GUARDS_UPDATED",substationName:document.getElementById("substationName").value},"*");
+   const frame=document.getElementById("shiftFrame");
+   if(frame&&frame.contentWindow){
+     frame.contentWindow.postMessage({
+       type:"WARUD_GUARDS_UPDATED",
+       substationName:document.getElementById("substationName").value
+     },"*");
+   }
  }
 }
 function toggleQuickPanel(){
@@ -665,14 +803,16 @@ function toggleQuickPanel(){
  const opening=p.classList.contains("hidden");
  p.classList.toggle("hidden",!opening);
  const toggle=document.getElementById("quickEntryToggle");
- if(toggle)toggle.setAttribute("aria-expanded",String(opening));
+ if(toggle){
+   toggle.setAttribute("aria-expanded",String(opening));
+   toggle.textContent=opening?"जलद हजेरी भरणे ▲":"जलद हजेरी भरणे ▼";
+ }
  if(opening){
    quickMonth.value=monthSel.value;
    quickYear.value=yearInput.value;
    populateQuickGuard();
-   p.scrollIntoView({behavior:"smooth",block:"start"});
-   const guardSelect=document.getElementById("quickGuard");
-   if(guardSelect)guardSelect.focus({preventScroll:true});
+   // Expand immediately below the button/attendance controls, then bring it into view.
+   requestAnimationFrame(()=>p.scrollIntoView({behavior:"smooth",block:"start"}));
  }
 }
 
