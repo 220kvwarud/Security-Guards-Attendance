@@ -2,7 +2,7 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17365d"><meta name="description" content="220kV Warud Security Attendance"><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png">
-<title>२२० केव्ही वरुड - सुरक्षा रक्षक हजेरी व्यवस्थापन</title>
+<title>220kV Warud – सुरक्षा व्यवस्थापन प्रणाली | २२० केव्ही वरुड - सुरक्षा रक्षक हजेरी व्यवस्थापन</title>
 <style>
 :root{--navy:#17365d;--blue:#1f4e78;--pale:#eaf2f8;--line:#c5d0da;--green:#e2f0d9;--yellow:#fff2cc;--red:#fce4d6}
 *{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#1e2935;font:14px Arial,sans-serif}.wrap{max-width:1700px;margin:16px auto;padding:0 12px}
@@ -125,18 +125,23 @@ td.day button{font-size:14px;padding:4px 0}
 .developer-credit{text-align:center;color:#667085;font-size:12px;padding:12px 8px;margin-top:10px}
 @media print{.developer-credit{display:none!important}}
 
+
+/* Restored quick attendance sub-section */
+#quickPanel { margin-top: 14px; }
+#quickPanel .quick-workflow { border-left: 4px solid var(--accent, #2563eb); }
+#quickEntryToggle[aria-expanded="true"] { outline: 2px solid currentColor; outline-offset: 2px; }
 </style>
 </head>
 <body><div class="wrap">
 <header class="top"><div id="headerMonth" class="main-page-title">मासिक सुरक्षा रक्षक हजेरी पत्रक – नोव्हेंबर 2026</div></header>
-<nav class="tabs no-print"><button id="tabAttendance" class="tab active" onclick="showTab('attendance')">मासिक हजेरी पत्रक</button><button id="tabQuick" class="tab" onclick="showTab('quick')">जलद हजेरी भरणे</button><button id="tabGuards" class="tab" onclick="showTab('guards')">सुरक्षा रक्षक व्यवस्थापन</button></nav>
+<nav class="tabs no-print"><button id="tabAttendance" class="tab active" onclick="showTab('attendance')">हजेरी</button><button id="tabShift" class="tab" onclick="showTab('shift')">शिफ्ट ड्युटी चार्ट</button><button id="tabGuards" class="tab" onclick="showTab('guards')">सुरक्षा रक्षक तपशील</button></nav>
 
 <section id="attendancePanel" class="panel">
 <div class="controls no-print">
 <label class="field">महिना<select id="month"></select></label>
 <label class="field">वर्ष<input id="year" type="number" min="2000" max="2100" value="2026" style="width:90px"></label>
 <label class="field" style="min-width:300px">उपकेंद्राचे नाव (बदलण्यासाठी येथे भरा)<input id="substationName" type="text" value="२२० केव्ही उपकेंद्र वरुड (बेणोडा)" style="min-width:300px"></label>
-<button onclick="window.print()">प्रिंट / PDF</button><button class="alt" onclick="exportExcel()">Excel डाउनलोड (Print सारखे)</button>
+<button type="button" class="alt" onclick="toggleQuickPanel()">जलद हजेरी भरणे</button><button onclick="window.print()">प्रिंट / PDF</button><button class="alt" onclick="exportExcel()">Excel डाउनलोड (Print सारखे)</button>
 <button class="alt" onclick="backupData()">Backup घ्या</button>
 <button class="alt" onclick="document.getElementById('restoreBackup').click()">Backup Restore</button>
 <input id="restoreBackup" type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupFile(event)">
@@ -244,9 +249,257 @@ td.day button{font-size:14px;padding:4px 0}
 </section>
 <div class="developer-credit">Developed by Prashant D. Patil</div>
 </div>
+<section id="shiftPanel" class="hidden" style="margin-top:12px"><iframe id="shiftFrame" title="सुरक्षा रक्षक शिफ्ट ड्युटी चार्ट" style="display:block;width:100%;height:1450px;border:0;border-radius:10px;background:#fff" loading="lazy" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;mr&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;220kV Warud – सुरक्षा रक्षक शिफ्ट ड्युटी चार्ट&lt;/title&gt;
+&lt;style&gt;
+:root{--navy:#123456;--blue:#1769aa;--line:#cbd5e1;--ink:#172334;--muted:#64748b}
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:var(--ink);font:13px/1.45 &quot;Segoe UI&quot;,Arial,sans-serif}
+header{background:linear-gradient(120deg,#102e50,#1d5f95);color:white;text-align:center;padding:18px}
+header h1{font-size:22px;margin:0}header h2{font-size:14px;margin:3px 0 8px;font-weight:600}.doc{font-size:17px;font-weight:900;letter-spacing:.7px}
+main{max-width:1800px;margin:16px auto;padding:0 12px 28px}
+.panel,.tablebox,.legend{background:white;border:1px solid #d9e2ec;border-radius:9px;box-shadow:0 2px 8px #102e5010}
+.toolbar{padding:12px;display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.field{display:flex;flex-direction:column;gap:4px}.field label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase}
+input,select,button{font:inherit;border:1px solid #b8c5d3;border-radius:6px;padding:8px;color:var(--ink);background:white}
+button{cursor:pointer;font-weight:700;white-space:nowrap}button:hover{filter:brightness(.96)}button.primary{background:var(--blue);color:white;border-color:var(--blue)}button.soft{background:#edf4fb;color:#174a75;border-color:#c8d9e9}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+.info{padding:10px 13px;margin-bottom:12px;font-size:12px}
+.shiftkey{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.chip{padding:5px 9px;border-radius:6px;font-weight:800;border:1px solid #d5deea}
+.A{background:#e2f0d9;color:#215b2c}.B{background:#dbeafe;color:#164e8a}.C{background:#fce4d6;color:#8a3512}.G{background:#eee8ff;color:#56399b}.OFF{background:#e8edf3;color:#34465a}.LV{background:#fff2cc;color:#805b00}
+.tablebox{overflow:auto}table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:11px}
+th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px;text-align:center;white-space:nowrap}
+thead th{position:sticky;top:0;background:#e7eff7;color:#163b60;z-index:3;height:38px}
+th:first-child,td:first-child{border-left:1px solid var(--line)}thead tr:first-child th{border-top:1px solid var(--line)}
+.identity{position:sticky;z-index:2;background:#fff}.identity.name{left:0;min-width:180px;text-align:left}.identity.guardno{left:180px;min-width:65px}.identity.desig{left:245px;min-width:105px}
+thead .identity{z-index:5;background:#e7eff7}.dayhead{min-width:52px}.dayhead.weekend{background:#d7e5f2}
+.cell{min-width:52px}.cell select{width:48px;padding:5px 1px;border:0;background:transparent;text-align:center;font-weight:900;font-size:11px}
+.cell select:focus{outline:2px solid #3b82f6;border-radius:4px}
+.status-A{background:#e2f0d9}.status-B{background:#dbeafe}.status-C{background:#fce4d6}.status-G{background:#eee8ff}.status-OFF{background:#e8edf3}.status-LV{background:#fff2cc}
+td.name{font-weight:800}.count{font-weight:900;background:#f5f8fb;min-width:42px}
+tfoot th{background:#e7eff7;position:sticky;bottom:0;z-index:2}
+.legend{padding:12px;margin-top:12px}.muted{color:var(--muted);font-size:11px}
+.sign{display:none;justify-content:flex-end;margin-top:36px}.sign div{width:260px;text-align:center;border-top:1px solid #222;padding-top:36px;font-weight:800}
+.modalback{display:none;position:fixed;inset:0;background:#0b1d32a8;z-index:10;align-items:center;justify-content:center;padding:15px}.modalback.show{display:flex}.modal{background:white;padding:18px;border-radius:10px;width:min(500px,100%);max-height:90vh;overflow:auto}.modal input{width:100%}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+@media print{
+ body{background:#fff;font-size:14px;font-weight:700;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ header{background:#fff;color:#000;border-bottom:2px solid #000;padding:5px}
+ header h1{font-size:18px;font-weight:900}header h2{font-size:14px;font-weight:800}
+ .doc{font-size:16px;font-weight:900}
+ main{max-width:none;margin:2px;padding:0}.noprint{display:none!important}
+ .info{font-size:14px;font-weight:800;padding:3px 6px;margin-bottom:3px}
+ .shiftkey{gap:4px;margin:3px 0 4px}.chip{font-size:14px;font-weight:800;padding:2px 5px;border:1px solid #555}
+ .tablebox{overflow:visible;border:0;box-shadow:none}
+ table{width:100%;min-width:0;table-layout:fixed;font-size:14px;font-weight:800;border-collapse:collapse}
+ th,td{padding:2px 1px;white-space:normal;font-size:14px;line-height:1.05;font-weight:800;border-color:#555;overflow-wrap:anywhere}
+ thead th{position:static;height:auto;font-size:14px;font-weight:900}
+ .identity{position:static!important;font-weight:900}
+ .identity.name{width:31mm;min-width:31mm;font-size:14px}
+ .identity.guardno{width:13mm;min-width:13mm;font-size:14px}.identity.desig{width:18mm;min-width:18mm;font-size:14px}
+ .dayhead,.cell{min-width:0;width:auto;font-size:14px;font-weight:800}
+ .dayhead small{font-size:12px}
+ .cell select{appearance:none;width:100%;padding:0;font-size:14px;line-height:1.05;font-weight:900;color:#000!important}
+ .count{min-width:0;font-size:14px;font-weight:900}
+ tfoot th{position:static;font-size:12px;line-height:1.05;font-weight:900}
+ #roster tbody tr{height:var(--print-row-height,9mm)}
+ #roster thead tr{height:10mm}#roster tfoot tr{height:10mm}
+ #roster tbody td{vertical-align:middle}
+ .legend{font-size:14px;font-weight:900;padding:3px;margin-top:3px;box-shadow:none}
+ .legend .muted{display:none!important}
+ .sign{display:flex;margin-top:8px}.sign div{font-size:14px;font-weight:900;padding-top:18px;width:65mm}
+ @page{size:A3 landscape;margin:5mm}
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;header&gt;&lt;h1 id=&quot;shiftSubstationTitle&quot;&gt;२२० केव्ही उपकेंद्र वरुड (बेणोडा)&lt;/h1&gt;&lt;div class=&quot;doc&quot; id=&quot;mainHeading&quot;&gt;सुरक्षा रक्षकांचे मासिक शिफ्ट ड्युटी पत्रक&lt;/div&gt;&lt;/header&gt;
+&lt;main&gt;
+&lt;section class=&quot;panel toolbar noprint&quot;&gt;
+ &lt;div class=&quot;field&quot;&gt;&lt;label&gt;उपकेंद्राचे नाव (बदलता येईल)&lt;/label&gt;&lt;input id=&quot;shiftSubstationName&quot; type=&quot;text&quot; value=&quot;२२० केव्ही उपकेंद्र वरुड (बेणोडा)&quot; style=&quot;min-width:260px&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;field&quot;&gt;&lt;label&gt;महिना&lt;/label&gt;&lt;select id=&quot;month&quot;&gt;&lt;/select&gt;&lt;/div&gt;
+ &lt;div class=&quot;field&quot;&gt;&lt;label&gt;वर्ष&lt;/label&gt;&lt;select id=&quot;year&quot;&gt;&lt;/select&gt;&lt;/div&gt;
+ &lt;div class=&quot;field&quot;&gt;&lt;label&gt;सुरक्षा रक्षक शोधा&lt;/label&gt;&lt;input id=&quot;search&quot; placeholder=&quot;नाव / नो. क्र. / पदनाम&quot;&gt;&lt;/div&gt;
+ &lt;div class=&quot;actions&quot;&gt;
+  &lt;button class=&quot;primary&quot; id=&quot;print&quot;&gt;प्रिंट / PDF&lt;/button&gt;&lt;button class=&quot;soft&quot; id=&quot;csv&quot;&gt;Excel (CSV) डाउनलोड&lt;/button&gt;&lt;button class=&quot;soft&quot; id=&quot;backup&quot;&gt;बॅकअप जतन&lt;/button&gt;&lt;button class=&quot;soft&quot; id=&quot;restore&quot;&gt;बॅकअप पुनर्संचयित&lt;/button&gt;&lt;input type=&quot;file&quot; id=&quot;restoreFile&quot; accept=&quot;.json&quot; hidden&gt;
+  &lt;button class=&quot;soft&quot; id=&quot;bulk&quot;&gt;जलद ड्युटी वाटप&lt;/button&gt;&lt;button class=&quot;soft&quot; id=&quot;editTimings&quot;&gt;शिफ्ट वेळ बदला&lt;/button&gt;
+ &lt;/div&gt;
+&lt;/section&gt;
+&lt;section class=&quot;panel info&quot;&gt;
+ &lt;b&gt;शिफ्ट वेळा:&lt;/b&gt; &lt;span id=&quot;timingSummary&quot;&gt;&lt;/span&gt;
+ &lt;div class=&quot;muted noprint&quot;&gt;प्रत्येक सुरक्षा रक्षकाच्या तारखेनुसार शिफ्ट निवडा. बदल आपोआप जतन होतात.. Use बॅकअप जतन to keep a separate monthly copy. सुरक्षा रक्षकांची नावे, क्रमांक व पदनाम मुख्य सुरक्षा रक्षक तपशील विभागातून व्यवस्थापित करा.&lt;/div&gt;
+&lt;/section&gt;
+&lt;div class=&quot;shiftkey&quot;&gt;
+ &lt;span class=&quot;chip A&quot; id=&quot;chipA&quot;&gt;&lt;/span&gt;&lt;span class=&quot;chip B&quot; id=&quot;chipB&quot;&gt;&lt;/span&gt;&lt;span class=&quot;chip C&quot; id=&quot;chipC&quot;&gt;&lt;/span&gt;&lt;span class=&quot;chip G&quot; id=&quot;chipG&quot;&gt;&lt;/span&gt;&lt;span class=&quot;chip OFF&quot;&gt;WO – Weekly Off&lt;/span&gt;&lt;span class=&quot;chip LV&quot;&gt;L – Leave / Other&lt;/span&gt;
+&lt;/div&gt;
+&lt;section class=&quot;tablebox&quot;&gt;&lt;table id=&quot;roster&quot;&gt;&lt;thead id=&quot;thead&quot;&gt;&lt;/thead&gt;&lt;tbody id=&quot;tbody&quot;&gt;&lt;/tbody&gt;&lt;tfoot id=&quot;tfoot&quot;&gt;&lt;/tfoot&gt;&lt;/table&gt;&lt;/section&gt;
+&lt;section class=&quot;legend&quot;&gt;&lt;b&gt;Daily shift strength (number of employees assigned)&lt;/b&gt;&lt;p class=&quot;muted noprint&quot;&gt;खालील ओळीत प्रत्येक दिवशी A, B, C आणि General शिफ्टमधील सुरक्षा रक्षकांची संख्या दर्शविली आहे.&lt;/p&gt;&lt;/section&gt;
+&lt;section class=&quot;sign&quot;&gt;&lt;div&gt;Substation In-charge&lt;br&gt;220kV Warud (Benoda) Substation&lt;/div&gt;&lt;/section&gt;
+&lt;/main&gt;
+&lt;div class=&quot;modalback noprint&quot; id=&quot;timingModal&quot;&gt;&lt;div class=&quot;modal&quot;&gt;&lt;h3&gt;शिफ्ट वेळ बदला&lt;/h3&gt;&lt;p class=&quot;muted&quot;&gt;Set the duty start and end times. These timings are reflected in the chart, legend, and exported CSV.&lt;/p&gt;&lt;form id=&quot;timingForm&quot;&gt;
+&lt;div style=&quot;display:grid;grid-template-columns:1fr 1fr;gap:10px&quot;&gt;
+&lt;div&gt;&lt;label&gt;A Shift – Start&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeAStart&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;A Shift – End&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeAEnd&quot; required&gt;&lt;/div&gt;
+&lt;div&gt;&lt;label&gt;B Shift – Start&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeBStart&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;B Shift – End&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeBEnd&quot; required&gt;&lt;/div&gt;
+&lt;div&gt;&lt;label&gt;C Shift – Start&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeCStart&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;C Shift – End&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeCEnd&quot; required&gt;&lt;/div&gt;
+&lt;div&gt;&lt;label&gt;General Shift – Start&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeGStart&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;General Shift – End&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;timeGEnd&quot; required&gt;&lt;/div&gt;
+&lt;div&gt;&lt;label&gt;Lunch Break – Start&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;lunchStart&quot; required&gt;&lt;/div&gt;&lt;div&gt;&lt;label&gt;Lunch Break – End&lt;/label&gt;&lt;input type=&quot;time&quot; id=&quot;lunchEnd&quot; required&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&quot;modalfoot&quot;&gt;&lt;button type=&quot;button&quot; id=&quot;cancelTimings&quot;&gt;Cancel&lt;/button&gt;&lt;button class=&quot;primary&quot;&gt;Save Timings&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;modalback noprint&quot; id=&quot;bulkModal&quot;&gt;&lt;div class=&quot;modal&quot;&gt;&lt;h3&gt;जलद ड्युटी वाटप Duty&lt;/h3&gt;&lt;p class=&quot;muted&quot;&gt;Use a single duty, weekly shift rotation, or a repeating 3-shift-days / 3-general-days pattern.&lt;/p&gt;&lt;form id=&quot;bulkForm&quot;&gt;
+&lt;label&gt;Apply to&lt;/label&gt;&lt;select id=&quot;bulkEmployee&quot;&gt;&lt;option value=&quot;ALL&quot;&gt;सर्व सुरक्षा रक्षक&lt;/option&gt;&lt;/select&gt;
+&lt;p&gt;&lt;label&gt;Assignment method&lt;/label&gt;&lt;select id=&quot;assignMode&quot;&gt;&lt;option value=&quot;single&quot;&gt;Single duty for date range&lt;/option&gt;&lt;option value=&quot;rotation&quot;&gt;Shift rotation after weekly off / General duty with weekly off&lt;/option&gt;&lt;option value=&quot;shiftGeneral&quot;&gt;3 days Shift + 3 days General (weekly pattern)&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+&lt;div id=&quot;singleFields&quot;&gt;&lt;label&gt;Duty&lt;/label&gt;&lt;select id=&quot;bulkShift&quot;&gt;&lt;option value=&quot;A&quot;&gt;A Shift&lt;/option&gt;&lt;option value=&quot;B&quot;&gt;B Shift&lt;/option&gt;&lt;option value=&quot;C&quot;&gt;C Shift&lt;/option&gt;&lt;option value=&quot;G&quot;&gt;General Shift&lt;/option&gt;&lt;option value=&quot;OFF&quot;&gt;Weekly Off&lt;/option&gt;&lt;option value=&quot;LV&quot;&gt;Leave / Other&lt;/option&gt;&lt;option value=&quot;&quot;&gt;Clear assignment&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
+&lt;div id=&quot;rotationFields&quot; style=&quot;display:none&quot;&gt;
+ &lt;p&gt;&lt;label&gt;Starting duty&lt;/label&gt;&lt;select id=&quot;firstShift&quot;&gt;&lt;option value=&quot;A&quot;&gt;A Shift&lt;/option&gt;&lt;option value=&quot;B&quot;&gt;B Shift&lt;/option&gt;&lt;option value=&quot;C&quot;&gt;C Shift&lt;/option&gt;&lt;option value=&quot;G&quot;&gt;General Shift&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;label&gt;Shift rotation sequence&lt;/label&gt;&lt;select id=&quot;rotationSequence&quot;&gt;&lt;option value=&quot;ABC&quot;&gt;A → B → C → A (weekly)&lt;/option&gt;&lt;option value=&quot;ACB&quot;&gt;A → C → B → A (weekly)&lt;/option&gt;&lt;option value=&quot;BCA&quot;&gt;B → C → A → B (weekly)&lt;/option&gt;&lt;option value=&quot;BAC&quot;&gt;B → A → C → B (weekly)&lt;/option&gt;&lt;option value=&quot;CAB&quot;&gt;C → A → B → C (weekly)&lt;/option&gt;&lt;option value=&quot;CBA&quot;&gt;C → B → A → C (weekly)&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;label&gt;Weekly off day&lt;/label&gt;&lt;select id=&quot;weeklyOff&quot;&gt;&lt;option value=&quot;0&quot;&gt;Sunday&lt;/option&gt;&lt;option value=&quot;1&quot;&gt;Monday&lt;/option&gt;&lt;option value=&quot;2&quot;&gt;Tuesday&lt;/option&gt;&lt;option value=&quot;3&quot;&gt;Wednesday&lt;/option&gt;&lt;option value=&quot;4&quot;&gt;Thursday&lt;/option&gt;&lt;option value=&quot;5&quot;&gt;Friday&lt;/option&gt;&lt;option value=&quot;6&quot;&gt;Saturday&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;label style=&quot;display:flex;gap:8px;align-items:center;font-weight:600&quot;&gt;&lt;input id=&quot;staggerOff&quot; type=&quot;checkbox&quot; checked style=&quot;width:auto&quot;&gt; Stagger weekly off for all employees (different off days)&lt;/label&gt;
+ &lt;p class=&quot;muted&quot;&gt;For A/B/C: the employee continues the selected shift until the weekly off; immediately after that weekly off, the next working day changes to the next shift in the selected sequence. Example: A → WO → B → WO → C. For General duty, the employee remains on G and receives the selected weekly off. If stagger is selected, weekly off days are distributed across weekdays for employees assigned together.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&quot;shiftGeneralFields&quot; style=&quot;display:none&quot;&gt;
+ &lt;p&gt;&lt;label&gt;Duty for first 3 working days&lt;/label&gt;&lt;select id=&quot;halfFirstDuty&quot;&gt;&lt;option value=&quot;A&quot;&gt;A Shift&lt;/option&gt;&lt;option value=&quot;B&quot;&gt;B Shift&lt;/option&gt;&lt;option value=&quot;C&quot;&gt;C Shift&lt;/option&gt;&lt;option value=&quot;G&quot;&gt;General Shift&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;label&gt;First shift in rotation (used when first duty is General)&lt;/label&gt;&lt;select id=&quot;halfFirstShift&quot;&gt;&lt;option value=&quot;A&quot;&gt;A Shift&lt;/option&gt;&lt;option value=&quot;B&quot;&gt;B Shift&lt;/option&gt;&lt;option value=&quot;C&quot;&gt;C Shift&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;label&gt;Shift rotation sequence after weekly off&lt;/label&gt;&lt;select id=&quot;halfRotationSequence&quot;&gt;&lt;option value=&quot;ABC&quot;&gt;A → B → C → A&lt;/option&gt;&lt;option value=&quot;ACB&quot;&gt;A → C → B → A&lt;/option&gt;&lt;option value=&quot;BAC&quot;&gt;B → A → C → B&lt;/option&gt;&lt;option value=&quot;BCA&quot;&gt;B → C → A → B&lt;/option&gt;&lt;option value=&quot;CAB&quot;&gt;C → A → B → C&lt;/option&gt;&lt;option value=&quot;CBA&quot;&gt;C → B → A → C&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;label&gt;Weekly off day&lt;/label&gt;&lt;select id=&quot;halfWeeklyOff&quot;&gt;&lt;option value=&quot;0&quot;&gt;Sunday&lt;/option&gt;&lt;option value=&quot;1&quot;&gt;Monday&lt;/option&gt;&lt;option value=&quot;2&quot;&gt;Tuesday&lt;/option&gt;&lt;option value=&quot;3&quot;&gt;Wednesday&lt;/option&gt;&lt;option value=&quot;4&quot;&gt;Thursday&lt;/option&gt;&lt;option value=&quot;5&quot;&gt;Friday&lt;/option&gt;&lt;option value=&quot;6&quot;&gt;Saturday&lt;/option&gt;&lt;/select&gt;&lt;/p&gt;
+ &lt;label style=&quot;display:flex;gap:8px;align-items:center;font-weight:600&quot;&gt;&lt;input id=&quot;halfStaggerOff&quot; type=&quot;checkbox&quot; checked style=&quot;width:auto&quot;&gt; Stagger weekly off for all employees&lt;/label&gt;
+ &lt;p class=&quot;muted&quot;&gt;The first 3 working days can be A, B, C or General. The next 3 working days are the other duty type. After weekly off, the shift advances according to the selected rotation sequence (for example A → C → B → A). Weekly off does not count as a working day. An initial weekly off does not advance the selected starting shift.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div style=&quot;display:flex;gap:10px&quot;&gt;&lt;div style=&quot;flex:1&quot;&gt;&lt;label&gt;From date&lt;/label&gt;&lt;input id=&quot;fromDay&quot; type=&quot;number&quot; min=&quot;1&quot; max=&quot;31&quot; value=&quot;1&quot; required&gt;&lt;/div&gt;&lt;div style=&quot;flex:1&quot;&gt;&lt;label&gt;To date&lt;/label&gt;&lt;input id=&quot;toDay&quot; type=&quot;number&quot; min=&quot;1&quot; max=&quot;31&quot; value=&quot;1&quot; required&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;modalfoot&quot;&gt;&lt;button type=&quot;button&quot; id=&quot;cancelBulk&quot;&gt;Cancel&lt;/button&gt;&lt;button class=&quot;primary&quot;&gt;Apply&lt;/button&gt;&lt;/div&gt;&lt;/form&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;script&gt;
+&quot;use strict&quot;;
+const DEFAULT=[];
+const $=id=&gt;document.getElementById(id), KEY=&quot;warud_security_shift_roster_v1&quot;, ATT_KEY=&quot;warud_security_attendance_mr_v6&quot;;
+const DEFAULT_TIMINGS={AStart:&quot;06:00&quot;,AEnd:&quot;14:00&quot;,BStart:&quot;14:00&quot;,BEnd:&quot;22:00&quot;,CStart:&quot;22:00&quot;,CEnd:&quot;06:00&quot;,GStart:&quot;08:00&quot;,GEnd:&quot;17:00&quot;,lunchStart:&quot;12:00&quot;,lunchEnd:&quot;13:00&quot;};
+let db=load();function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(!x)x={employees:[],months:{}};x.employees=Array.isArray(x.employees)?x.employees:[];x.months=x.months||{};x.settings=x.settings||{};x.settings.timings={...DEFAULT_TIMINGS,...(x.settings.timings||{})};x.settings.substationName=x.settings.substationName||&quot;२२० केव्ही उपकेंद्र वरुड (बेणोडा)&quot;;return x}catch{return {employees:[],months:{},settings:{timings:{...DEFAULT_TIMINGS},substationName:&quot;२२० केव्ही उपकेंद्र वरुड (बेणोडा)&quot;}}}}
+function syncStaff(){try{const a=JSON.parse(localStorage.getItem(ATT_KEY)||&quot;{}&quot;);const gs=Array.isArray(a.guards)?a.guards:[];db.employees=gs.map((g,i)=&gt;({id:String(g.uid||(&quot;guard-&quot;+(g.guardNo||i+1))),name:String(g.name||&quot;&quot;),guardNo:String(g.guardNo||&quot;&quot;),designation:String(g.designation||&quot;सु. र.&quot;),active:true}));}catch(e){db.employees=[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+const now=new Date(),months=[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;,&quot;August&quot;,&quot;September&quot;,&quot;October&quot;,&quot;November&quot;,&quot;December&quot;];
+months.forEach((m,i)=&gt;$(&quot;month&quot;).add(new Option(m,i)));for(let y=now.getFullYear()-3;y&lt;=now.getFullYear()+5;y++)$(&quot;year&quot;).add(new Option(y,y));
+$(&quot;month&quot;).value=now.getMonth();$(&quot;year&quot;).value=now.getFullYear();
+function key(){return $(&quot;year&quot;).value+&quot;-&quot;+String(Number($(&quot;month&quot;).value)+1).padStart(2,&quot;0&quot;)}
+function days(){return new Date(Number($(&quot;year&quot;).value),Number($(&quot;month&quot;).value)+1,0).getDate()}
+function rec(){if(!db.months[key()])db.months[key()]={};return db.months[key()]}
+function staff(){return db.employees.filter(e=&gt;e.active!==false)}
+function esc(s){return String(s??&quot;&quot;).replace(/[&amp;&lt;&gt;&quot;&#x27;]/g,c=&gt;({&quot;&amp;&quot;:&quot;&amp;amp;&quot;,&quot;&lt;&quot;:&quot;&amp;lt;&quot;,&quot;&gt;&quot;:&quot;&amp;gt;&quot;,&#x27;&quot;&#x27;:&quot;&amp;quot;&quot;,&quot;&#x27;&quot;:&quot;&amp;#39;&quot;}[c]))}
+const opts=[[&quot;&quot;,&quot;—&quot;],[&quot;A&quot;,&quot;A&quot;],[&quot;B&quot;,&quot;B&quot;],[&quot;C&quot;,&quot;C&quot;],[&quot;G&quot;,&quot;G&quot;],[&quot;OFF&quot;,&quot;WO&quot;],[&quot;LV&quot;,&quot;L&quot;]];
+function getTimes(){return {...DEFAULT_TIMINGS,...(db.settings?.timings||{})}}
+function setSubstationName(v){const name=String(v||&quot;&quot;).trim()||&quot;उपकेंद्राचे नाव नमूद नाही&quot;;$(&quot;shiftSubstationTitle&quot;).textContent=name;db.settings=db.settings||{};db.settings.substationName=name;save()}
+function showTimes(){const t=getTimes();$(&quot;timingSummary&quot;).textContent=`A Shift: ${t.AStart}–${t.AEnd} hrs | B Shift: ${t.BStart}–${t.BEnd} hrs | C Shift: ${t.CStart}–${t.CEnd} hrs (next day) | General: ${t.GStart}–${t.GEnd} hrs (Lunch: ${t.lunchStart}–${t.lunchEnd} hrs)`;$(&quot;chipA&quot;).textContent=`A – ${t.AStart} to ${t.AEnd}`;$(&quot;chipB&quot;).textContent=`B – ${t.BStart} to ${t.BEnd}`;$(&quot;chipC&quot;).textContent=`C – ${t.CStart} to ${t.CEnd}`;$(&quot;chipG&quot;).textContent=`G – ${t.GStart} to ${t.GEnd} (Lunch ${t.lunchStart}–${t.lunchEnd})`}
+function openTimingEditor(){const t=getTimes();Object.entries({timeAStart:&quot;AStart&quot;,timeAEnd:&quot;AEnd&quot;,timeBStart:&quot;BStart&quot;,timeBEnd:&quot;BEnd&quot;,timeCStart:&quot;CStart&quot;,timeCEnd:&quot;CEnd&quot;,timeGStart:&quot;GStart&quot;,timeGEnd:&quot;GEnd&quot;,lunchStart:&quot;lunchStart&quot;,lunchEnd:&quot;lunchEnd&quot;}).forEach(([id,k])=&gt;$(id).value=t[k]);$(&quot;timingModal&quot;).classList.add(&quot;show&quot;)}
+function render(){
+ syncStaff();const n=days(),q=$(&quot;search&quot;).value.toLowerCase(),list=staff().filter(e=&gt;(e.name+&quot; &quot;+e.guardNo+&quot; &quot;+e.designation).toLowerCase().includes(q)),r=rec();
+ $(&quot;mainHeading&quot;).textContent=`Monthly shift duty chart for the Month of ${months[Number($(&quot;month&quot;).value)]} ${$(&quot;year&quot;).value}`;
+ let h=&#x27;&lt;tr&gt;&lt;th class=&quot;identity name&quot;&gt;सुरक्षा रक्षकाचे नाव&lt;/th&gt;&lt;th class=&quot;identity guardno&quot;&gt;नो. क्र.&lt;/th&gt;&lt;th class=&quot;identity desig&quot;&gt;पदनाम&lt;/th&gt;&#x27;;
+ for(let d=1;d&lt;=n;d++){let wd=new Date(Number($(&quot;year&quot;).value),Number($(&quot;month&quot;).value),d).getDay();h+=`&lt;th class=&quot;dayhead ${wd===0||wd===6?&quot;weekend&quot;:&quot;&quot;}&quot;&gt;${d}&lt;br&gt;&lt;small&gt;${[&quot;Su&quot;,&quot;Mo&quot;,&quot;Tu&quot;,&quot;We&quot;,&quot;Th&quot;,&quot;Fr&quot;,&quot;Sa&quot;][wd]}&lt;/small&gt;&lt;/th&gt;`}
+ h+=&#x27;&lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;G&lt;/th&gt;&lt;th class=&quot;noprint&quot;&gt;Action&lt;/th&gt;&lt;/tr&gt;&#x27;;$(&quot;thead&quot;).innerHTML=h;
+ let body=&quot;&quot;,tot=Array.from({length:n},()=&gt;({A:0,B:0,C:0,G:0}));
+ list.forEach(e=&gt;{body+=`&lt;tr&gt;&lt;td class=&quot;identity name&quot;&gt;${esc(e.name)}&lt;/td&gt;&lt;td class=&quot;identity guardno&quot;&gt;${esc(e.guardNo||&quot;&quot;)}&lt;/td&gt;&lt;td class=&quot;identity desig&quot;&gt;${esc(e.designation)}&lt;/td&gt;`;
+ for(let d=1;d&lt;=n;d++){let v=(r[e.id]||{})[d]||&quot;&quot;,wd=new Date(Number($(&quot;year&quot;).value),Number($(&quot;month&quot;).value),d).getDay();if(tot[d-1][v]!==undefined)tot[d-1][v]++;body+=`&lt;td class=&quot;cell ${wd===0||wd===6?&quot;weekend&quot;:&quot;&quot;}&quot;&gt;&lt;select aria-label=&quot;${esc(e.name)} ${d}&quot; data-e=&quot;${esc(e.id)}&quot; data-d=&quot;${d}&quot; class=&quot;${v?&quot;status-&quot;+v:&quot;&quot;}&quot;&gt;${opts.map(([val,label])=&gt;`&lt;option value=&quot;${val}&quot; ${val===v?&quot;selected&quot;:&quot;&quot;}&gt;${label}&lt;/option&gt;`).join(&quot;&quot;)}&lt;/select&gt;&lt;/td&gt;`}
+ let counts={A:0,B:0,C:0,G:0};for(let d=1;d&lt;=n;d++){let v=(r[e.id]||{})[d];if(counts[v]!==undefined)counts[v]++}
+ body+=`&lt;td class=&quot;count&quot;&gt;${counts.A}&lt;/td&gt;&lt;td class=&quot;count&quot;&gt;${counts.B}&lt;/td&gt;&lt;td class=&quot;count&quot;&gt;${counts.C}&lt;/td&gt;&lt;td class=&quot;count&quot;&gt;${counts.G}&lt;/td&gt;&lt;td class=&quot;noprint&quot;&gt;&lt;button type=&quot;button&quot; class=&quot;removeEmp&quot; data-id=&quot;${esc(e.id)}&quot; title=&quot;Delete employee&quot; style=&quot;padding:4px 7px;color:#b42318;border-color:#f1b6b2;background:#fff5f4&quot;&gt;Delete&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;`});
+ $(&quot;tbody&quot;).innerHTML=body||`&lt;tr&gt;&lt;td colspan=&quot;${n+7}&quot;&gt;No employees found.&lt;/td&gt;&lt;/tr&gt;`;
+ let foot=&#x27;&lt;tr&gt;&lt;th colspan=&quot;2&quot;&gt;Daily shift strength&lt;/th&gt;&#x27;;for(let d=0;d&lt;n;d++)foot+=`&lt;th&gt;${Object.values(tot[d]).some(x=&gt;x)?`A${tot[d].A} B${tot[d].B} C${tot[d].C} G${tot[d].G}`:&quot;&quot;}&lt;/th&gt;`;foot+=&#x27;&lt;th colspan=&quot;4&quot;&gt;—&lt;/th&gt;&lt;/tr&gt;&#x27;;$(&quot;tfoot&quot;).innerHTML=foot;
+ $(&quot;tbody&quot;).querySelectorAll(&quot;select&quot;).forEach(s=&gt;s.onchange=()=&gt;{let r=rec(),id=s.dataset.e,d=s.dataset.d;if(!r[id])r[id]={};if(s.value)r[id][d]=s.value;else delete r[id][d];save();s.className=s.value?&quot;status-&quot;+s.value:&quot;&quot;;renderFootOnly()});
+}
+function renderFootOnly(){render()}
+// Delete employee from the active roster and remove that employee&#x27;s saved
+// duty entries from every month, after an explicit confirmation.
+$(&quot;tbody&quot;).addEventListener(&quot;click&quot;,ev=&gt;{});
+$(&quot;month&quot;).onchange=render;$(&quot;year&quot;).onchange=render;$(&quot;search&quot;).oninput=render;
+function preparePrintLayout(){
+ const rowCount=$(&quot;tbody&quot;).querySelectorAll(&quot;tr&quot;).length;
+ // A3 landscape printable height after heading, duty timings, key, footer and signature.
+ // Keep each row tall where possible; compress proportionally as employees are added.
+ const rowHeight=Math.max(5.2,Math.min(12,185/Math.max(1,rowCount)));
+ document.documentElement.style.setProperty(&quot;--print-row-height&quot;,rowHeight.toFixed(2)+&quot;mm&quot;);
+}
+$(&quot;print&quot;).onclick=()=&gt;{preparePrintLayout();window.print()};
+window.addEventListener(&quot;beforeprint&quot;,preparePrintLayout);
+/* Guard records are centrally managed in the attendance module. */
+$(&quot;assignMode&quot;).onchange=()=&gt;{const mode=$(&quot;assignMode&quot;).value;$(&quot;singleFields&quot;).style.display=mode===&quot;single&quot;?&quot;block&quot;:&quot;none&quot;;$(&quot;rotationFields&quot;).style.display=mode===&quot;rotation&quot;?&quot;block&quot;:&quot;none&quot;;$(&quot;shiftGeneralFields&quot;).style.display=mode===&quot;shiftGeneral&quot;?&quot;block&quot;:&quot;none&quot;};
+$(&quot;bulk&quot;).onclick=()=&gt;{$(&quot;bulkEmployee&quot;).innerHTML=&#x27;&lt;option value=&quot;ALL&quot;&gt;सर्व सुरक्षा रक्षक&lt;/option&gt;&#x27;+staff().map(e=&gt;`&lt;option value=&quot;${esc(e.id)}&quot;&gt;${esc(e.name)}&lt;/option&gt;`).join(&quot;&quot;);$(&quot;fromDay&quot;).max=days();$(&quot;toDay&quot;).max=days();$(&quot;toDay&quot;).value=days();$(&quot;assignMode&quot;).value=&quot;single&quot;;$(&quot;assignMode&quot;).onchange();$(&quot;bulkModal&quot;).classList.add(&quot;show&quot;)};
+$(&quot;cancelBulk&quot;).onclick=()=&gt;$(&quot;bulkModal&quot;).classList.remove(&quot;show&quot;);
+$(&quot;bulkForm&quot;).onsubmit=e=&gt;{e.preventDefault();let a=Number($(&quot;fromDay&quot;).value),b=Number($(&quot;toDay&quot;).value),n=days();if(a&lt;1||b&lt;a||b&gt;n){alert(&quot;Please enter a valid date range.&quot;);return}
+ let ids=$(&quot;bulkEmployee&quot;).value===&quot;ALL&quot;?staff().map(x=&gt;x.id):[$(&quot;bulkEmployee&quot;).value],r=rec(),rotation=$(&quot;assignMode&quot;).value===&quot;rotation&quot;;
+ if(!confirm(&quot;Apply this assignment? Existing entries in the selected range will be replaced.&quot;))return;
+ ids.forEach((id,index)=&gt;{
+  if(!r[id])r[id]={};
+  const mode=$(&quot;assignMode&quot;).value;
+  if(mode===&quot;single&quot;){
+   const v=$(&quot;bulkShift&quot;).value;
+   for(let d=a;d&lt;=b;d++){if(v)r[id][d]=v;else delete r[id][d]}
+  }else{
+   const offBase=Number(mode===&quot;shiftGeneral&quot;?$(&quot;halfWeeklyOff&quot;).value:$(&quot;weeklyOff&quot;).value);
+   const stagger=mode===&quot;shiftGeneral&quot;?$(&quot;halfStaggerOff&quot;).checked:$(&quot;staggerOff&quot;).checked;
+   const offDay=stagger&amp;&amp;ids.length&gt;1?(offBase+index)%7:offBase;
+   if(mode===&quot;rotation&quot;){
+    const seq=$(&quot;rotationSequence&quot;).value.split(&quot;&quot;),first=$(&quot;firstShift&quot;).value;
+    let shiftIndex=Math.max(0,seq.indexOf(first)),workedSinceLastOff=false;
+    for(let d=a;d&lt;=b;d++){
+     const weekday=new Date(Number($(&quot;year&quot;).value),Number($(&quot;month&quot;).value),d).getDay();
+     if(weekday===offDay){
+      r[id][d]=&quot;OFF&quot;;
+      // An initial weekly off does not consume the selected starting shift.
+      if(workedSinceLastOff&amp;&amp;first!==&quot;G&quot;)shiftIndex=(shiftIndex+1)%seq.length;
+      workedSinceLastOff=false;
+     }else{
+      r[id][d]=first===&quot;G&quot;?&quot;G&quot;:seq[shiftIndex];
+      workedSinceLastOff=true;
+     }
+    }
+   }else{
+    // 3+3 pattern: first 3 working days use the chosen starting duty;
+    // the next 3 use the other duty type. Weekly off pauses the 6-day cycle.
+    // The shift sequence advances only when a weekly off follows a completed
+    // working block. A weekly off on the first calendar date does not advance it.
+    const seq=$(&quot;halfRotationSequence&quot;).value.split(&quot;&quot;);
+    const firstDuty=$(&quot;halfFirstDuty&quot;).value;
+    let shiftIndex=seq.indexOf(firstDuty===&quot;G&quot;?$(&quot;halfFirstShift&quot;).value:firstDuty);
+    if(shiftIndex&lt;0)shiftIndex=0;
+    let phase=0,workedSinceLastOff=false,initialCycle=true;
+    for(let d=a;d&lt;=b;d++){
+     const weekday=new Date(Number($(&quot;year&quot;).value),Number($(&quot;month&quot;).value),d).getDay();
+     if(weekday===offDay){
+      r[id][d]=&quot;OFF&quot;;
+      if(workedSinceLastOff){
+       shiftIndex=(shiftIndex+1)%seq.length;
+       initialCycle=false;
+      }
+      phase=0;
+      workedSinceLastOff=false;
+     }else{
+      const currentShift=seq[shiftIndex];
+      if(initialCycle &amp;&amp; firstDuty===&quot;G&quot;){
+       // Only the first cycle may begin with General; subsequent cycles
+       // begin with the newly selected shift after weekly off.
+       r[id][d]=phase&lt;3?&quot;G&quot;:currentShift;
+      }else{
+       r[id][d]=phase&lt;3?currentShift:&quot;G&quot;;
+      }
+      phase=(phase+1)%6;
+      workedSinceLastOff=true;
+     }
+    }
+   }
+  }
+ });save();$(&quot;bulkModal&quot;).classList.remove(&quot;show&quot;);render()};
+$(&quot;backup&quot;).onclick=()=&gt;{let data={application:&quot;Warud Shift Duty Chart&quot;,version:1,month:key(),record:rec(),employees:db.employees,settings:db.settings};let blob=new Blob([JSON.stringify(data,null,2)],{type:&quot;application/json&quot;}),a=document.createElement(&quot;a&quot;),u=URL.createObjectURL(blob);a.href=u;a.download=&quot;Warud_Shift_Duty_&quot;+key()+&quot;.json&quot;;a.click();URL.revokeObjectURL(u)};
+$(&quot;restore&quot;).onclick=()=&gt;$(&quot;restoreFile&quot;).click();
+$(&quot;restoreFile&quot;).onchange=e=&gt;{let f=e.target.files[0];if(!f)return;let rd=new FileReader();rd.onload=()=&gt;{try{let x=JSON.parse(rd.result);if(x.application!==&quot;Warud Shift Duty Chart&quot;)throw Error(&quot;Invalid backup file&quot;);if(!confirm(&quot;Restore this month&#x27;s roster and employee list?&quot;))return;db.employees=x.employees;db.months[x.month]=x.record;if(x.settings)db.settings=x.settings;let [y,m]=x.month.split(&quot;-&quot;);if(![...$(&quot;year&quot;).options].some(o=&gt;o.value===y))$(&quot;year&quot;).add(new Option(y,y));$(&quot;year&quot;).value=y;$(&quot;month&quot;).value=Number(m)-1;save();render()}catch(err){alert(err.message)}e.target.value=&quot;&quot;};rd.readAsText(f)};
+$(&quot;csv&quot;).onclick=()=&gt;{let n=days(),r=rec(),list=staff(),rows=[[&quot;220kV Warud (Benoda) Substation&quot;],[&quot;सुरक्षा रक्षकांचे मासिक शिफ्ट ड्युटी पत्रक&quot;,months[Number($(&quot;month&quot;).value)]+&quot; &quot;+$(&quot;year&quot;).value],(()=&gt;{let t=getTimes();return [`A: ${t.AStart}-${t.AEnd}`,`B: ${t.BStart}-${t.BEnd}`,`C: ${t.CStart}-${t.CEnd}`,`General: ${t.GStart}-${t.GEnd} (Lunch ${t.lunchStart}-${t.lunchEnd})`]})(),[&quot;सुरक्षा रक्षकाचे नाव&quot;,&quot;नो. क्र.&quot;,&quot;पदनाम&quot;,...Array.from({length:n},(_,i)=&gt;String(i+1)), &quot;A Count&quot;,&quot;B Count&quot;,&quot;C Count&quot;,&quot;G Count&quot;]];list.forEach(e=&gt;{let d=r[e.id]||{},vals=[e.name,e.designation];let c={A:0,B:0,C:0,G:0};for(let i=1;i&lt;=n;i++){let v=d[i]||&quot;&quot;;vals.push(v);if(c[v]!==undefined)c[v]++}rows.push([...vals,c.A,c.B,c.C,c.G])});let csv=rows.map(row=&gt;row.map(v=&gt;&#x27;&quot;&#x27;+String(v??&quot;&quot;).replace(/&quot;/g,&#x27;&quot;&quot;&#x27;)+&#x27;&quot;&#x27;).join(&quot;,&quot;)).join(&quot;\r\n&quot;),blob=new Blob([&quot;\ufeff&quot;+csv],{type:&quot;text/csv;charset=utf-8&quot;}),a=document.createElement(&quot;a&quot;),u=URL.createObjectURL(blob);a.href=u;a.download=&quot;Warud_Shift_Duty_&quot;+key()+&quot;.csv&quot;;a.click();URL.revokeObjectURL(u)};
+$(&quot;editTimings&quot;).onclick=openTimingEditor;
+$(&quot;cancelTimings&quot;).onclick=()=&gt;$(&quot;timingModal&quot;).classList.remove(&quot;show&quot;);
+$(&quot;timingForm&quot;).onsubmit=e=&gt;{e.preventDefault();const t={AStart:$(&quot;timeAStart&quot;).value,AEnd:$(&quot;timeAEnd&quot;).value,BStart:$(&quot;timeBStart&quot;).value,BEnd:$(&quot;timeBEnd&quot;).value,CStart:$(&quot;timeCStart&quot;).value,CEnd:$(&quot;timeCEnd&quot;).value,GStart:$(&quot;timeGStart&quot;).value,GEnd:$(&quot;timeGEnd&quot;).value,lunchStart:$(&quot;lunchStart&quot;).value,lunchEnd:$(&quot;lunchEnd&quot;).value};if(t.lunchEnd&lt;=t.lunchStart){alert(&quot;Lunch break end time must be later than lunch break start time.&quot;);return}db.settings=db.settings||{};db.settings.timings=t;save();showTimes();$(&quot;timingModal&quot;).classList.remove(&quot;show&quot;)};
+syncStaff();$(&quot;shiftSubstationName&quot;).value=db.settings.substationName||&quot;२२० केव्ही उपकेंद्र वरुड (बेणोडा)&quot;;setSubstationName($(&quot;shiftSubstationName&quot;).value);$(&quot;shiftSubstationName&quot;).addEventListener(&quot;input&quot;,()=&gt;setSubstationName($(&quot;shiftSubstationName&quot;).value));showTimes();save();render();
+window.addEventListener(&quot;storage&quot;,e=&gt;{if(e.key===ATT_KEY)render()});
+window.addEventListener(&quot;message&quot;,e=&gt;{if(e.data===&quot;WARUD_GUARDS_UPDATED&quot;||e.data?.type===&quot;WARUD_GUARDS_UPDATED&quot;){if(e.data?.substationName&amp;&amp;!$(&quot;shiftSubstationName&quot;).value.trim()){$(&quot;shiftSubstationName&quot;).value=e.data.substationName;setSubstationName(e.data.substationName)}render()}});
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;"></iframe></section>
 <script>
 const initialData=[{"sr": 1, "name": "श्री. डी . डी. बोकडे", "guardNo": "१४६", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 2, "name": "श्री. यू . ए. भोसले", "guardNo": "१४८", "designation": "सु. र.", "attendance": ["P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P"]}, {"sr": 3, "name": "श्री. आर. पी. पाटील", "guardNo": "१४७", "designation": "सु. र.", "attendance": ["WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P"]}, {"sr": 4, "name": "श्री. पि .आर. कुडवे", "guardNo": "२२३४", "designation": "सु. र.", "attendance": ["P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P"]}, {"sr": 5, "name": "श्री.व्ही. आर. मंगळे", "guardNo": "१२२३", "designation": "सु. र.", "attendance": ["P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P"]}, {"sr": 6, "name": "श्री.यू. आर. बागडे", "guardNo": "१२२०", "designation": "सु. र.", "attendance": ["P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P", "P", "WO/P", "P", "P", "P", "P", "P"]}];
-let guards=initialData.map(g=>({sr:g.sr,name:g.name,guardNo:g.guardNo,designation:g.designation,months:{"2026-10":[...g.attendance]}}));
+let guards=initialData.map(g=>({uid:"guard-"+String(g.guardNo||g.sr),sr:g.sr,name:g.name,guardNo:g.guardNo,designation:g.designation,months:{"2026-10":[...g.attendance]}}));
 const months=["जानेवारी","फेब्रुवारी","मार्च","एप्रिल","मे","जून","जुलै","ऑगस्ट","सप्टेंबर","ऑक्टोबर","नोव्हेंबर","डिसेंबर"];
 const monthSel=document.getElementById("month"),yearInput=document.getElementById("year");
 months.forEach((m,i)=>{const o=document.createElement("option");o.value=i;o.textContent=m;monthSel.appendChild(o)});monthSel.value="10";
@@ -389,7 +642,39 @@ function clearMonth(){
  if(!confirm(g.name+" यांची संपूर्ण महिन्याची हजेरी रिकामी करायची का?"))return;
  att(g);g.months[mkey()]=Array(daysInMonth()).fill("");refreshMonthlyAfterQuickEntry();
 }
-function showTab(which){const att=which==="attendance",quick=which==="quick",guard=which==="guards";document.getElementById("attendancePanel").classList.toggle("hidden",!att);document.getElementById("quickPanel").classList.toggle("hidden",!quick);document.getElementById("guardPanel").classList.toggle("hidden",!guard);document.getElementById("tabAttendance").classList.toggle("active",att);document.getElementById("tabQuick").classList.toggle("active",quick);document.getElementById("tabGuards").classList.toggle("active",guard);if(guard)renderGuardList()}
+function showTab(which){
+ const att=which==="attendance",guard=which==="guards",shift=which==="shift";
+ document.getElementById("attendancePanel").classList.toggle("hidden",!att);
+ document.getElementById("quickPanel").classList.add("hidden");
+ const quickToggle=document.getElementById("quickEntryToggle");
+ if(quickToggle)quickToggle.setAttribute("aria-expanded","false");
+ document.getElementById("guardPanel").classList.toggle("hidden",!guard);
+ document.getElementById("shiftPanel").classList.toggle("hidden",!shift);
+ document.getElementById("tabAttendance").classList.toggle("active",att);
+ document.getElementById("tabGuards").classList.toggle("active",guard);
+ document.getElementById("tabShift").classList.toggle("active",shift);
+ if(guard)renderGuardList();
+ if(shift){
+   autosave();
+   const f=document.getElementById("shiftFrame");
+   if(f&&f.contentWindow)f.contentWindow.postMessage({type:"WARUD_GUARDS_UPDATED",substationName:document.getElementById("substationName").value},"*");
+ }
+}
+function toggleQuickPanel(){
+ const p=document.getElementById("quickPanel");
+ const opening=p.classList.contains("hidden");
+ p.classList.toggle("hidden",!opening);
+ const toggle=document.getElementById("quickEntryToggle");
+ if(toggle)toggle.setAttribute("aria-expanded",String(opening));
+ if(opening){
+   quickMonth.value=monthSel.value;
+   quickYear.value=yearInput.value;
+   populateQuickGuard();
+   p.scrollIntoView({behavior:"smooth",block:"start"});
+   const guardSelect=document.getElementById("quickGuard");
+   if(guardSelect)guardSelect.focus({preventScroll:true});
+ }
+}
 
 function addGuardFromForm(){
  const name=document.getElementById("newName").value.trim();
@@ -399,7 +684,7 @@ function addGuardFromForm(){
  if(guardNo && guards.some(g=>String(g.guardNo||"").trim()===guardNo)){
    alert("हा नो. क्र. आधीपासून नोंदवलेला आहे. कृपया वेगळा नो. क्र. भरा.");document.getElementById("newGuardNo").focus();return;
  }
- guards.push({sr:guards.length+1,name,guardNo,designation:desig,months:{}});
+ guards.push({uid:"guard-"+(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2)),sr:guards.length+1,name,guardNo,designation:desig,months:{}});
  document.getElementById("newName").value="";
  document.getElementById("newGuardNo").value="";
  document.getElementById("newDesig").value="सु. र.";
@@ -513,7 +798,7 @@ function restoreBackupFile(event){
    const d=JSON.parse(reader.result);
    if(!d||!Array.isArray(d.guards))throw new Error("Invalid backup");
    if(!confirm("सध्याचा डेटा बदलून निवडलेल्या Backup मधील डेटा Restore करायचा का? आधी सध्याचा Backup घ्या."))return;
-   guards=d.guards.map((g,i)=>({sr:i+1,name:String(g.name||""),guardNo:String(g.guardNo||""),designation:String(g.designation||"सु. र."),months:g.months&&typeof g.months==="object"?g.months:{}}));
+   guards=d.guards.map((g,i)=>({uid:String(g.uid||("guard-"+(g.guardNo||i+1))),sr:i+1,name:String(g.name||""),guardNo:String(g.guardNo||""),designation:String(g.designation||"सु. र."),months:g.months&&typeof g.months==="object"?g.months:{}}));
    if(d.month!==undefined)monthSel.value=String(d.month);
    if(d.year!==undefined)yearInput.value=String(d.year);
    if(d.damageAmount!==undefined)document.getElementById("damageAmount").value=d.damageAmount;
@@ -542,7 +827,7 @@ if(saved){const d=JSON.parse(saved);
    if(g.months&&typeof g.months==="object")Object.keys(g.months).forEach(k=>{months[k]=(g.months[k]||[]).map(fixCode)});
    else if(Array.isArray(g.attendance)&&d.year!==undefined&&d.month!==undefined)months[`${d.year}-${d.month}`]=g.attendance.map(fixCode);
    const rawName=String(g.name||""),m=rawName.match(tail);
-   return{sr:i+1,name:rawName.replace(tail,"").trim(),guardNo:dev(String(g.guardNo||(m?m[1]:""))),designation:g.designation||"सु. र.",months};
+   return{uid:String(g.uid||("guard-"+(g.guardNo||i+1))),sr:i+1,name:rawName.replace(tail,"").trim(),guardNo:dev(String(g.guardNo||(m?m[1]:""))),designation:g.designation||"सु. र.",months};
  });
  if(d.damageAmount!==undefined)document.getElementById("damageAmount").value=d.damageAmount;
  if(d.damageStatus)document.getElementById("damageStatus").value=d.damageStatus;
@@ -550,6 +835,7 @@ if(saved){const d=JSON.parse(saved);
  if(d.attendanceRemark)document.getElementById("attendanceRemark").value=d.attendanceRemark;
  if(d.month!==undefined)monthSel.value=String(d.month);
  if(d.year)yearInput.value=d.year}}catch(e){}
+guards=guards.map((g,i)=>({...g,uid:String(g.uid||("guard-"+(g.guardNo||i+1)))}));
 // Security guard management: delegated handlers remain active after list redraws.
 const guardListBody=document.getElementById("guardList");
 if(guardListBody){
@@ -560,6 +846,7 @@ if(guardListBody){
    if(!Number.isInteger(i)||!guards[i]||!["name","guardNo","designation"].includes(field))return;
    guards[i][field]=el.value;
    autosave();
+   const sf=document.getElementById("shiftFrame");if(sf&&sf.contentWindow)sf.contentWindow.postMessage("WARUD_GUARDS_UPDATED","*");
    if(field==="name"||field==="guardNo")syncQuickGuardNames();
  });
  guardListBody.addEventListener("change",function(ev){
