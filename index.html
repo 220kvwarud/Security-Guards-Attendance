@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-<link rel="manifest" href="./manifest.webmanifest">
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17365d"><meta name="description" content="220kV Warud Security Attendance"><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png">
 <title>२२० केव्ही वरुड - सुरक्षा रक्षक हजेरी व्यवस्थापन</title>
 <style>
 :root{--navy:#17365d;--blue:#1f4e78;--pale:#eaf2f8;--line:#c5d0da;--green:#e2f0d9;--yellow:#fff2cc;--red:#fce4d6}
@@ -29,6 +28,13 @@ td.day button:focus{outline:2px solid #1f4e78;outline-offset:-2px}
 @media(max-width:700px){.guard-form{grid-template-columns:1fr}.signatures{grid-template-columns:repeat(2,1fr)}.tabs{flex-wrap:wrap}}
 @page{size:A3 landscape;margin:7mm}
 @media print{body{background:#fff}.wrap{margin:0;padding:0;max-width:none}.top,.tabs,.controls,.quick,.quick-workflow,.no-print,#guardPanel,#quickPanel{display:none!important}#attendancePanel{display:block!important;border:0;padding:0;margin:0}.panel{border:0;padding:0}.sheet{padding:0;overflow:visible}table{min-width:0;width:100%;margin-top:4px}th,td{font-size:7px;padding:2px 1px}th.day,td.day{width:auto}th.name,td.name{width:145px}th.sr,td.sr{width:24px}th.desig,td.desig{width:32px}th.sum,td.sum{width:47px}td.day button{font-size:7px;padding:1px 0}.sheet-head{padding:4px}.sheet-head.title{font-size:12px}.sheet-head.sub{font-size:8px}.legend,.note{font-size:7px;padding:3px}.cert p{font-size:7px;padding:2px}.signatures{display:grid;grid-template-columns:1fr;margin-top:16px}.forward-cert{justify-self:stretch;text-align:right;font-weight:700;font-size:12px;min-height:22px;width:100%;border-top:0;padding-right:2px}.sig{font-size:7px;min-height:38px}}
+
+
+/* Monthly consolidated totals for all security guards */
+tr.month-grand-total td{background:#d9eaf7!important;color:#102a43!important;font-weight:800!important;border-top:2px solid #17365d!important;border-bottom:2px solid #17365d!important}
+tr.month-grand-total td.grand-label{text-align:right!important;padding-right:8px!important;white-space:normal}
+tr.month-grand-total td.grand-day{background:#eef4f9!important}
+@media print{tr.month-grand-total td{font-size:12px!important;padding:4px 1px!important}tr.month-grand-total td.grand-label{font-size:12px!important}}
 
 /* Official printed register heading */
 .print-letterhead{display:none}
@@ -286,6 +292,9 @@ function render(){
  for(let day=0;day<n;day++){const v=A[day]||"";rows+=`<td class="day ${cls(v)}"><button title="क्लिक करून कोड बदला" onclick="cycleStatus(${i},${day})">${v||"·"}</button></td>`}
  rows+=`<td class="sum">${c.p}</td><td class="sum">${c.off}</td><td class="sum">${c.absent}</td><td class="sum">${c.extra}</td><td class="sum">${c.total}</td></tr>`;
  });
+ // Consolidated monthly totals across every active security guard.
+ const monthlyTotals=guards.reduce((sum,g)=>{const c=calc(g);sum.p+=c.p;sum.off+=c.off;sum.absent+=c.absent;sum.extra+=c.extra;sum.total+=c.total;return sum;},{p:0,off:0,absent:0,extra:0,total:0});
+ rows+=`<tr class="month-grand-total"><td class="grand-label" colspan="${4+n+4}">सर्व सुरक्षा रक्षकांची एकूण कर्तव्ये</td><td class="sum grand-total-duty">${monthlyTotals.total}</td></tr>`;
  document.getElementById("thead").innerHTML=head;document.getElementById("tbody").innerHTML=rows;
  renderGuardList();populateQuickGuard();
 }
@@ -521,7 +530,7 @@ function restoreBackupFile(event){
 }
 function saveData(){try{localStorage.setItem("warud_security_attendance_mr_v6",JSON.stringify({guards,month:monthSel.value,year:yearInput.value,damageAmount:document.getElementById("damageAmount").value,damageStatus:document.getElementById("damageStatus").value,substationName:document.getElementById("substationName").value,attendanceRemark:document.getElementById("attendanceRemark").value}));document.getElementById("saveStatus").textContent="बदल जतन झाले";}catch(e){alert("जतन करता आले नाही. CSV डाउनलोड करा.");}}
 function autosave(){try{localStorage.setItem("warud_security_attendance_mr_v6",JSON.stringify({guards,month:monthSel.value,year:yearInput.value,damageAmount:document.getElementById("damageAmount").value,damageStatus:document.getElementById("damageStatus").value,substationName:document.getElementById("substationName").value,attendanceRemark:document.getElementById("attendanceRemark").value}));}catch(e){}}
-function exportCSV(){const n=daysInMonth(),m=+monthSel.value,y=+yearInput.value;const rows=[["अ. क्र.","नो. क्र.","सुरक्षा रक्षकाचे नाव","पदनाम",...Array.from({length:n},(_,i)=>`${i+1} ${new Date(y,m,i+1).toLocaleDateString("mr-IN",{weekday:"short"})}`),"हजर दिवस","साप्ताहिक सुट्टी","गैरहजर","अतिरिक्त कर्तव्ये","एकूण कर्तव्ये"]];guards.forEach((g,i)=>{const c=calc(g);rows.push([i+1,g.guardNo||"",g.name,g.designation,...att(g).slice(0,n),c.p,c.off,c.absent,c.extra,c.total])});const csv=rows.map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`Warud_Hajeri_${months[m]}_${y}.csv`;a.click();URL.revokeObjectURL(url)}
+function exportCSV(){const n=daysInMonth(),m=+monthSel.value,y=+yearInput.value;const rows=[["अ. क्र.","नो. क्र.","सुरक्षा रक्षकाचे नाव","पदनाम",...Array.from({length:n},(_,i)=>`${i+1} ${new Date(y,m,i+1).toLocaleDateString("mr-IN",{weekday:"short"})}`),"हजर दिवस","साप्ताहिक सुट्टी","गैरहजर","अतिरिक्त कर्तव्ये","एकूण कर्तव्ये"]];const totals={p:0,off:0,absent:0,extra:0,total:0};guards.forEach((g,i)=>{const c=calc(g);totals.p+=c.p;totals.off+=c.off;totals.absent+=c.absent;totals.extra+=c.extra;totals.total+=c.total;rows.push([i+1,g.guardNo||"",g.name,g.designation,...att(g).slice(0,n),c.p,c.off,c.absent,c.extra,c.total])});rows.push(["","","सर्व सुरक्षा रक्षकांची एकूण कर्तव्ये","",...Array(n).fill(""),"","","","",totals.total]);const csv=rows.map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`Warud_Hajeri_${months[m]}_${y}.csv`;a.click();URL.revokeObjectURL(url)}
 monthSel.addEventListener("change",render);yearInput.addEventListener("change",render);document.getElementById("damageAmount").addEventListener("input",autosave);document.getElementById("damageStatus").addEventListener("change",autosave);
 try{const saved=["v6","v5","v4","v3","v2"].map(v=>localStorage.getItem("warud_security_attendance_mr_"+v)).find(Boolean);
 if(saved){const d=JSON.parse(saved);
@@ -583,4 +592,8 @@ if(guardListBody){
 renderGuardList();
 updatePrintCustomFields();
 render();
+</script><script>
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.warn));
+}
 </script></body></html>
